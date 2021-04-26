@@ -34,10 +34,9 @@ public class BusStop
 
     public String alterStopName(String nameString)
     {
-        String unchangedName= nameString;
         String[] name = nameString.split(" ", 2);
         if(name[0].equals("FLAGSTOP") || name[0].equals("WB") || name[0].equals("NB") || name[0].equals("SB") || name[0].equals("EB"))
-            return (name[1] + " " + name[0]);
-        return unchangedName;
+            nameString= name[1] + " " + name[0];
+        return nameString;
     }
 }
