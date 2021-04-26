@@ -1,5 +1,3 @@
-import org.json.JSONArray;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -7,6 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args)
     {
+        //Vitali is not the smartest guy is he?
         System.out.println("This is a test!");
         BusStop stop = new BusStop(1, 1, "", "");
         try {
