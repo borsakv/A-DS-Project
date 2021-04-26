@@ -1,0 +1,5 @@
+TODO:
+Graph Class - Cian Jinks
+TST Class - Vitali Borsak
+Read stops and transfers - James Cowan
+Read routes - Ajchan Mamedov

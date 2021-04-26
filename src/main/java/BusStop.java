@@ -4,6 +4,7 @@ public class BusStop
     private int stopCode;
     public String stopName;
     public String stopDescription;
+    public RouteSection[] routesSections;
 
     /* Do we need these?
 
