@@ -3,16 +3,19 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 
-public class RouteSection {
+public class TripDatabase {
 
-    List<TripSection> info = new ArrayList<TripSection>();
+    public ArrayList<TripSection> database;
 
     //a constructor of RouteSection needed to initialise the object and ArrayList
-    public RouteSection() {}
+    public TripDatabase()
+    {
+        database = new ArrayList<>();
+    }
 
     //holds one line of the information from stop_times.txt
     //has 4 parameters tripID, stopID, arrivalTime, departureTime
-    private class TripSection
+    static public class TripSection
     {
         private int tripID;
         private int stopID;
@@ -27,12 +30,6 @@ public class RouteSection {
             this.arrivalTime = arrivalTime;
             this.departureTime = departureTime;
         }
-    }
-
-    public void addRouteSection(int tripID, int stopID, String arrivalTime, String departureTime)
-    {
-        TripSection tripSectionNode = new TripSection(tripID,stopID,arrivalTime,departureTime);
-        info.add(tripSectionNode);
     }
 
     public void readTheStopTimeFile()
@@ -60,7 +57,7 @@ public class RouteSection {
                 arrivalTime = inputs[1];
                 stopID = Integer.parseInt(inputs[3]);
                 departureTime = inputs[2];
-                addRouteSection(tripID,stopID,arrivalTime,departureTime);
+                database.add(new TripSection(tripID,stopID,arrivalTime,departureTime));
             }
 
         } catch (FileNotFoundException e)
@@ -70,39 +67,9 @@ public class RouteSection {
 
     }
 
-    //get a tripID of a specific line given it's number in array list
-    public int getTripID(int numberInList)
-    {
-        return info.get(numberInList).tripID;
-    }
-
-    //get a stopID of a specific line given it's number in array list
-    public int getStopID(int numberInList)
-    {
-        return info.get(numberInList).stopID;
-    }
-
-    //get a arrivalTime of a specific line given it's number in array list
-    public String getArrivalTime(int numberInList)
-    {
-        return info.get(numberInList).arrivalTime;
-    }
-
-    //get a departureTime of a specific line given it's number in array list
-    public String getDepartureTime(int numberInList)
-    {
-        return info.get(numberInList).departureTime;
-    }
-
-    //get a full set of information(Inside of an Object) given it's number in array list
-    public TripSection getInfo(int numberInList)
-    {
-        return info.get(numberInList);
-    }
-
     public static void main(String[] args)
     {
-        RouteSection testObject = new RouteSection();
+        TripDatabase testObject = new TripDatabase();
         testObject.readTheStopTimeFile();
     }
 }
