@@ -8,12 +8,12 @@ public class TernarySearchTrie {
     }
 
     // Insert new word into the trie.
-    public void insert(String stopName, float stopId){
+    public void insert(String stopName, int stopId){
         if((stopName != null && !stopName.isEmpty()) && (stopId >= 0))
             insert(stopName, stopId, 0, root);
     }
 
-    private Node insert(String stopName, float stopId, int index, Node node) {
+    private Node insert(String stopName, int stopId, int index, Node node) {
         char ch = stopName.charAt(index);
         if (node == null) node = new Node(ch);
         node.stopId.add(stopId);
@@ -47,7 +47,7 @@ public class TernarySearchTrie {
         char val;
         Node left, middle, right;
         boolean end;
-        ArrayList<Float> stopId;
+        ArrayList<Integer> stopId= new ArrayList<Integer>();
 
         public Node(){ }
 
