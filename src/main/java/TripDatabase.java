@@ -87,7 +87,7 @@ public class TripDatabase {
                 if(inputs.length == 9 && !inputs[8].equals(""))
                     distTraveled= Float.parseFloat(inputs[8]);
 
-                if(arrivalTime.valid || departureTime.valid)
+                if(arrivalTime.validate() && departureTime.validate())
                     database.add(new TripSection(tripID, stopID, arrivalTime, departureTime, stopSequence, stopHeadsign, pickupType, dropOffType, distTraveled));
             }
             scanner.close();
@@ -104,7 +104,6 @@ public class TripDatabase {
         public int hours;
         public int minutes;
         public int seconds;
-        public boolean valid;
 
         public TripTime(String time){ updateTime(time); }
 
@@ -125,14 +124,12 @@ public class TripDatabase {
                 this.seconds = Integer.parseInt(Character.toString(times[2].charAt(1)));
             else
                 this.seconds = Integer.parseInt(times[2]);
-            checkIfValid();
         }
 
-        public void checkIfValid(){
-            if(hours < 24 || minutes < 60 || seconds < 60)
-                valid = true;
-            else
-                valid = false;
+        public boolean validate(){
+            if(hours < 24 && minutes < 60 && seconds < 60)
+                return true;
+            return false;
         }
     }
 }
