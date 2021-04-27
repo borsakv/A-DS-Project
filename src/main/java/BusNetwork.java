@@ -5,10 +5,10 @@
 
 import com.sun.source.tree.NewArrayTree;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.function.Function;
 
 public class BusNetwork
@@ -45,11 +45,85 @@ public class BusNetwork
             addStop(stop);
         }
     }
+    public BusNetwork(String stopsPath, String transfersPath) {
+        adjacencyList = new HashMap<>();
+        lookupTable = new HashMap<>();
+        readStops(stopsPath);
+        readTransfers(transfersPath);
+    }
 
     void addStop(BusStop stop)
     {
         lookupTable.put(stop.stopId, stop);
         adjacencyList.put(stop.stopId, new ArrayList<>());
+    }
+
+    private static String moveInfo(String input){
+        String keyword = input.substring(0, 2).strip();
+        if (keyword.toUpperCase().equals("WB") || keyword.toUpperCase().equals("SB") || keyword.toUpperCase().equals("NB") || keyword.toUpperCase().equals("EB")) {
+            return input.substring(3).trim() + input.substring(2,3) + input.substring(0,2);
+        }
+        return input;
+    }
+
+    private void readStops(String filename) {
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
+            scanner.nextLine();
+            while (scanner.hasNextLine()){
+                String line = scanner.nextLine();
+                String[] stopInfo = line.split(",");
+                String parentStation = "";
+                int stopId = -1, stopCode = -1, locationType = -1;
+                double stopLatitude = -1.0, stopLongitude = -1.0;
+                try {
+                    parentStation = stopInfo[9];
+                } catch (ArrayIndexOutOfBoundsException ignored) {}
+                try {
+                    stopId = Integer.parseInt(stopInfo[0]);
+                } catch (NumberFormatException ignored) {}
+                try {
+                    stopCode = Integer.parseInt(stopInfo[1]);
+                } catch (NumberFormatException ignored) {}
+                try {
+                    stopLatitude = Double.parseDouble(stopInfo[4]);
+                } catch (NumberFormatException ignored) {}
+                try {
+                    stopLongitude = Double.parseDouble(stopInfo[5]);
+                } catch (NumberFormatException ignored) {}
+                try {
+                    locationType = Integer.parseInt(stopInfo[8]);
+                } catch (NumberFormatException ignored) {}
+                addStop(new BusStop(stopId, stopCode, moveInfo(stopInfo[2]), stopInfo[3], stopLatitude, stopLongitude, stopInfo[6], stopInfo[7], locationType, parentStation));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(filename);
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException ignored) {}
+    }
+
+    private void readTransfers(String filepath) {
+        try {
+            File file = new File(filepath);
+            Scanner scanner = new Scanner(file);
+            scanner.nextLine();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] transfer = line.split(",");
+                if (Integer.parseInt(transfer[2]) == 0){
+                    addEdge(Integer.parseInt(transfer[0]), Integer.parseInt(transfer[1]), 2);
+                } else if (Integer.parseInt(transfer[2]) == 2){
+                    addEdge(Integer.parseInt(transfer[0]), Integer.parseInt(transfer[1]), Double.parseDouble(transfer[3])/100);
+                } else {
+                    throw new Exception("issue with input: " + line);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void addEdge(int fromStopID, int toStopID, double weight)
