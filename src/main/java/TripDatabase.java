@@ -15,36 +15,32 @@ public class TripDatabase {
         database = new ArrayList<>();
     }
 
-    static public class TripTime
-    {
-        public int hours;
-        public int minutes;
-        public int seconds;
-
-        public TripTime(int hours, int minute, int seconds)
-        {
-            this.hours = hours;
-            this.minutes = minute;
-            this.seconds = seconds;
-        }
-    }
-
     //holds one line of the information from stop_times.txt
     //has 4 parameters tripID, stopID, arrivalTime, departureTime
     static public class TripSection
     {
         private int tripID;
         private int stopID;
-        private String arrivalTime;
-        private String departureTime;
+        private TripTime arrivalTime;
+        private TripTime departureTime;
+        private int stopSequence;
+        private int stopHeadsign;
+        private int pickupType;
+        private int dropOffType;
+        private int distTraveled;
 
         //a constructor of TripSection to write in the information
-        public TripSection(int tripID, int stopID, String arrivalTime, String departureTime)
+        public TripSection(int tripID, int stopID, TripTime arrivalTime, TripTime departureTime, int stopSequence, int stopHeadsign, int pickupType, int dropOffType, int distTraveled)
         {
             this.tripID = tripID;
             this.stopID = stopID;
             this.arrivalTime = arrivalTime;
             this.departureTime = departureTime;
+            this.stopSequence = stopSequence;
+            this.stopHeadsign = stopHeadsign;
+            this.pickupType = pickupType;
+            this.dropOffType = dropOffType;
+            this.distTraveled = distTraveled;
         }
     }
 
@@ -73,7 +69,7 @@ public class TripDatabase {
                 arrivalTime = inputs[1];
                 stopID = Integer.parseInt(inputs[3]);
                 departureTime = inputs[2];
-                database.add(new TripSection(tripID,stopID,arrivalTime,departureTime));
+                //database.add(new TripSection(tripID, stopID, arrivalTime, departureTime));
             }
 
         } catch (FileNotFoundException e)
@@ -83,9 +79,18 @@ public class TripDatabase {
 
     }
 
-    public static void main(String[] args)
+
+    static public class TripTime
     {
-        TripDatabase testObject = new TripDatabase();
-        testObject.readTheStopTimeFile();
+        public int hours;
+        public int minutes;
+        public int seconds;
+
+        public TripTime(int hours, int minute, int seconds)
+        {
+            this.hours = hours;
+            this.minutes = minute;
+            this.seconds = seconds;
+        }
     }
 }
