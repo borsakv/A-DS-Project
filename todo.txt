@@ -1,5 +1,5 @@
 TODO:
-Graph Class - Cian Jinks
-TST Class - Vitali Borsak
-Read stops and transfers - James Cowan
-Read routes - Ajchan Mamedov
+Link together backend and implemented functionality 3 - Cian Jinks
+TST UI - Vitali Borsak
+General UI - James Cowan
+General UI - Ajchan Mamedov
