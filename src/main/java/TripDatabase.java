@@ -10,24 +10,24 @@ public class TripDatabase {
     public ArrayList<TripSection> database;
 
     //a constructor of RouteSection needed to initialise the object and ArrayList
-    public TripDatabase()
-    {
+    public TripDatabase() {
         database = new ArrayList<>();
+        readTheStopTimeFile();
     }
 
     //holds one line of the information from stop_times.txt
     //has 4 parameters tripID, stopID, arrivalTime, departureTime
     static public class TripSection
     {
-        private int tripID;
-        private int stopID;
-        private TripTime arrivalTime;
-        private TripTime departureTime;
-        private int stopSequence;
-        private int stopHeadsign;
-        private int pickupType;
-        private int dropOffType;
-        private int distTraveled;
+        public int tripID;
+        public int stopID;
+        public TripTime arrivalTime;
+        public TripTime departureTime;
+        public int stopSequence;
+        public int stopHeadsign;
+        public int pickupType;
+        public int dropOffType;
+        public int distTraveled;
 
         //a constructor of TripSection to write in the information
         public TripSection(int tripID, int stopID, TripTime arrivalTime, TripTime departureTime, int stopSequence, int stopHeadsign, int pickupType, int dropOffType, int distTraveled)
@@ -59,16 +59,23 @@ public class TripDatabase {
             {
                 int tripID;
                 int stopID;
-                String arrivalTime;
-                String departureTime;
+                String arrivalTimeString;
+                TripTime arrivalTime;
+                String departureTimeString;
+                TripTime departureTime;
+                int stopSequence;
+                int stopHeadsign;
+                int pickupType;
+                int dropOffType;
+                int distTraveled;
                 nextLine = scanner.nextLine();
                 //reads in the next line and splits it by a comma and a space to get the
                 //trip ID and arrival time
                 String[] inputs = nextLine.split(",");
                 tripID = Integer.parseInt(inputs[0]);
-                arrivalTime = inputs[1];
+                //arrivalTime = inputs[1];
                 stopID = Integer.parseInt(inputs[3]);
-                departureTime = inputs[2];
+                //departureTime = inputs[2];
                 //database.add(new TripSection(tripID, stopID, arrivalTime, departureTime));
             }
 
@@ -86,11 +93,13 @@ public class TripDatabase {
         public int minutes;
         public int seconds;
 
-        public TripTime(int hours, int minute, int seconds)
+        public TripTime(String time)
         {
-            this.hours = hours;
-            this.minutes = minute;
-            this.seconds = seconds;
+            updateTime(time);
+        }
+
+        public void updateTime(String time){
+
         }
     }
 }
