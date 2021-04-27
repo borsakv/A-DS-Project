@@ -64,24 +64,18 @@ public class BusNetwork
                 String parentStation = "";
                 int stopId = -1, stopCode = -1, locationType = -1;
                 double stopLatitude = -1.0, stopLongitude = -1.0;
-                try {
+                if(stopInfo.length == 10 && !stopInfo[9].equals("") && !stopInfo[9].equals(" "))
                     parentStation = stopInfo[9];
-                } catch (ArrayIndexOutOfBoundsException ignored) {}
-                try {
+                if(!stopInfo[0].equals("") && !stopInfo[0].equals(" "))
                     stopId = Integer.parseInt(stopInfo[0]);
-                } catch (NumberFormatException ignored) {}
-                try {
+                if(!stopInfo[1].equals("") && !stopInfo[1].equals(" "))
                     stopCode = Integer.parseInt(stopInfo[1]);
-                } catch (NumberFormatException ignored) {}
-                try {
+                if(!stopInfo[4].equals("") && !stopInfo[4].equals(" "))
                     stopLatitude = Double.parseDouble(stopInfo[4]);
-                } catch (NumberFormatException ignored) {}
-                try {
+                if(!stopInfo[5].equals("") && !stopInfo[5].equals(" "))
                     stopLongitude = Double.parseDouble(stopInfo[5]);
-                } catch (NumberFormatException ignored) {}
-                try {
+                if(!stopInfo[8].equals("") && !stopInfo[8].equals(" "))
                     locationType = Integer.parseInt(stopInfo[8]);
-                } catch (NumberFormatException ignored) {}
                 String stopName = moveInfo(stopInfo[2]);
                 addStop(new BusStop(stopId, stopCode, stopName, stopInfo[3], stopLatitude, stopLongitude, stopInfo[6], stopInfo[7], locationType, parentStation));
                 searchTrie.insert(stopName, stopId); // Here we populate the ternary search trie
