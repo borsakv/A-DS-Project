@@ -1,38 +1,30 @@
 public class BusStop
 {
-    private int stopId;
-    private int stopCode;
+    public int stopId;
+    public int stopCode;
     public String stopName;
     public String stopDescription;
-    public RouteSection[] routesSections;
-
-    /* Do we need these?
-
-    public int stopLatitude;
-    public int stopLongitude;
+    public double stopLatitude;
+    public double stopLongitude;
     private String zoneId;
     private String stopUrl;
-    private String locationType;
-    private String parentStation;*/
+    private int locationType;
+    private String parentStation;
 
-    public BusStop(int stopId, int stopCode, String stopName, String stopDescription)
-    {
-        this.stopId= stopId;
-        this.stopCode= stopCode;
-        this.stopName= alterStopName(stopName);
-        this.stopDescription= stopDescription;
+    public BusStop(int stopId, int stopCode, String stopName, String stopDescription, double stopLatitude, double stopLongitude, String zoneId, String stopUrl, int locationType, String parentStation) {
+        this.stopId = stopId;
+        this.stopCode = stopCode;
+        this.stopName = stopName;
+        this.stopDescription = stopDescription;
+        this.stopLatitude = stopLatitude;
+        this.stopLongitude = stopLongitude;
+        this.zoneId = zoneId;
+        this.stopUrl = stopUrl;
+        this.locationType = locationType;
+        this.parentStation = parentStation;
     }
 
-    public int getStopId()
-    {
-        return stopId;
-    }
-
-    public int getStopCode()
-    {
-        return stopCode;
-    }
-
+    /* Someone can maybe make use of this code in the reading in functions
     public String alterStopName(String nameString)
     {
         String[] name = nameString.split(" ", 2);
@@ -40,4 +32,5 @@ public class BusStop
             nameString= name[1] + " " + name[0];
         return nameString;
     }
+     */
 }
