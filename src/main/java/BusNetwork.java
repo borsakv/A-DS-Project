@@ -3,13 +3,9 @@
  * bus network - Created by Cian Jinks 26 Apr 22:39
  */
 
-import com.sun.source.tree.NewArrayTree;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.Function;
 
 public class BusNetwork
 {
@@ -28,42 +24,30 @@ public class BusNetwork
 
     private HashMap<Integer, ArrayList<NetworkNode>> adjacencyList;     // Maps stopID to adjacent nodes
     private HashMap<Integer, BusStop> lookupTable;                      // Maps stopID to corresponding BusStop
+    private TernarySearchTrie searchTrie;
 
     public BusNetwork()
     {
-        adjacencyList = new HashMap<>();
-        lookupTable = new HashMap<>();
+        initialise();
     }
 
-    // Initialise using a list of stops
-    public BusNetwork(ArrayList<BusStop> stops)
-    {
-        adjacencyList = new HashMap<>();
-        lookupTable = new HashMap<>();
-        for(BusStop stop : stops)
-        {
-            addStop(stop);
-        }
-    }
     public BusNetwork(String stopsPath, String transfersPath) {
-        adjacencyList = new HashMap<>();
-        lookupTable = new HashMap<>();
+        initialise();
         readStops(stopsPath);
         readTransfers(transfersPath);
     }
 
-    void addStop(BusStop stop)
+    private void initialise()
+    {
+        adjacencyList = new HashMap<>();
+        lookupTable = new HashMap<>();
+        searchTrie = new TernarySearchTrie();
+    }
+
+    public void addStop(BusStop stop)
     {
         lookupTable.put(stop.stopId, stop);
         adjacencyList.put(stop.stopId, new ArrayList<>());
-    }
-
-    private static String moveInfo(String input){
-        String keyword = input.substring(0, 2).strip();
-        if (keyword.toUpperCase().equals("WB") || keyword.toUpperCase().equals("SB") || keyword.toUpperCase().equals("NB") || keyword.toUpperCase().equals("EB")) {
-            return input.substring(3).trim() + input.substring(2,3) + input.substring(0,2);
-        }
-        return input;
     }
 
     private void readStops(String filename) {
@@ -105,6 +89,14 @@ public class BusNetwork
         } catch (ArrayIndexOutOfBoundsException ignored) {}
     }
 
+    private static String moveInfo(String input){
+        String keyword = input.substring(0, 2).strip();
+        if (keyword.toUpperCase().equals("WB") || keyword.toUpperCase().equals("SB") || keyword.toUpperCase().equals("NB") || keyword.toUpperCase().equals("EB")) {
+            return input.substring(3).trim() + input.substring(2,3) + input.substring(0,2);
+        }
+        return input;
+    }
+
     private void readTransfers(String filepath) {
         try {
             File file = new File(filepath);
@@ -114,9 +106,9 @@ public class BusNetwork
                 String line = scanner.nextLine();
                 String[] transfer = line.split(",");
                 if (Integer.parseInt(transfer[2]) == 0){
-                    addEdge(Integer.parseInt(transfer[0]), Integer.parseInt(transfer[1]), 2);
+                    addConnection(Integer.parseInt(transfer[0]), Integer.parseInt(transfer[1]), 2);
                 } else if (Integer.parseInt(transfer[2]) == 2){
-                    addEdge(Integer.parseInt(transfer[0]), Integer.parseInt(transfer[1]), Double.parseDouble(transfer[3])/100);
+                    addConnection(Integer.parseInt(transfer[0]), Integer.parseInt(transfer[1]), Double.parseDouble(transfer[3])/100);
                 } else {
                     throw new Exception("issue with input: " + line);
                 }
@@ -126,7 +118,7 @@ public class BusNetwork
         }
     }
 
-    void addEdge(int fromStopID, int toStopID, double weight)
+    public void addConnection(int fromStopID, int toStopID, double weight)
     {
         // If the from stop was not added to the graph before we will add it here
         adjacencyList.computeIfAbsent(fromStopID, k -> {
@@ -142,24 +134,24 @@ public class BusNetwork
         adjacencyList.get(fromStopID).add(new NetworkNode(weight, toStopID));
     }
 
-    double getConnection(int fromStopID, int toStopID)
+    public double getConnection(int fromStopID, int toStopID)
     {
         return adjacencyList.get(fromStopID).get(toStopID).weight;
     }
 
-    ArrayList<NetworkNode> getConnections(int stopID)
+    public ArrayList<NetworkNode> getConnections(int stopID)
     {
         return adjacencyList.get(stopID);
     }
 
     // Can return null
-    BusStop lookup(int stopID)
+    public BusStop lookup(int stopID)
     {
         return lookupTable.get(stopID);
     }
 
     // Uses dijkstra since we have no information with which to make an heuristic for something like A*
-    ArrayList<Integer> getShortestPath(int fromStopID, int toStopID, double[] r_Distance)
+    public ArrayList<Integer> getShortestPath(int fromStopID, int toStopID, double[] r_Distance)
     {
         HashMap<Integer, Double> distTo = new HashMap<>(adjacencyList.size());
         HashMap<Integer, Integer> prev = new HashMap<>(adjacencyList.size());
@@ -224,63 +216,63 @@ public class BusNetwork
     }
 
     // For testing
-    public static void main(String[] args)
-    {
-        // Using first 5 stops from the first route in stop_times.txt
-        ArrayList<BusStop> testStops = new ArrayList<>();
-        testStops.add(new BusStop(646,50640, "DUNBAR LOOP","DUNBAR @ LOOP",
-                49.234598,-123.185765,"ZN 99", "",0, ""));
-        testStops.add(new BusStop(378,50374,"EB W 41 AVE FS COLLINGWOOD ST","W 41 AVE @ COLLINGWOOD ST",
-                49.234692,-123.181654,"ZN 99", "",0, ""));
-        testStops.add(new BusStop(379,50375,"EB W 41 AVE FS BLENHEIM ST","W 41 AVE @ BLENHEIM ST",
-                49.234696,-123.178303,"ZN 99", "",0, ""));
-        testStops.add(new BusStop(381,50377,"EB W 41 AVE FS CARNARVON ST","W 41 AVE @ CARNARVON ST",
-                49.234677,-123.172505,"ZN 99", "",0, ""));
-        testStops.add(new BusStop(1269,51259,"NB MACKENZIE ST FS W 38 AVE","MACKENZIE ST @ W 38 AVE",
-                49.237919,-123.170182,"ZN 99", "",0, ""));
-        BusNetwork network = new BusNetwork(testStops);
-
-        /* Adding edges based on:
-        9017927, 5:25:00, 5:25:00,646,1,,0,0,
-        9017927, 5:25:50, 5:25:50,378,2,,0,0,0.3300
-        9017927, 5:26:28, 5:26:28,379,3,,0,0,0.5780
-        9017927, 5:27:33, 5:27:33,381,4,,0,0,1.0061
-        9017927, 5:28:52, 5:28:52,1269,5,,0,0,1.5221
-        */
-        network.addEdge(646, 378, 1);
-        network.addEdge(378, 379, 1);
-        network.addEdge(379, 381, 1);
-        network.addEdge(381, 1269, 1);
-
-        /* Adding some transfers
-        646,1907,0,
-        646,647,0,
-        1477,1394,2,300
-        */
-        network.addEdge(646, 1907, 2);
-        network.addEdge(646, 647, 2);
-        network.addEdge(1477, 1394, 3);
-
-        // New edge for shortest path test not from files
-        network.addEdge(647, 1394, 2);
-        network.addEdge(1394, 100, 2);
-
-        // Testing shortest path finding
-        double[] returnedDistance = new double[1];
-        int fromStopID = 646;
-        int toStopID = 100;
-        ArrayList<Integer> pathTaken = network.getShortestPath(fromStopID, toStopID, returnedDistance);
-        if(returnedDistance[0] == Double.POSITIVE_INFINITY) {
-            System.out.println("No route from from " + fromStopID + " to " + toStopID);
-        }
-        else {
-            System.out.println("Distance from " + fromStopID + " to " + toStopID + " is: " + returnedDistance[0]);
-            System.out.print("Path Taken: ");
-            for(Integer i : pathTaken)
-            {
-                System.out.print(i + " -> ");
-            }
-            System.out.println();
-        }
-    }
+//    public static void main(String[] args)
+//    {
+//        // Using first 5 stops from the first route in stop_times.txt
+//        ArrayList<BusStop> testStops = new ArrayList<>();
+//        testStops.add(new BusStop(646,50640, "DUNBAR LOOP","DUNBAR @ LOOP",
+//                49.234598,-123.185765,"ZN 99", "",0, ""));
+//        testStops.add(new BusStop(378,50374,"EB W 41 AVE FS COLLINGWOOD ST","W 41 AVE @ COLLINGWOOD ST",
+//                49.234692,-123.181654,"ZN 99", "",0, ""));
+//        testStops.add(new BusStop(379,50375,"EB W 41 AVE FS BLENHEIM ST","W 41 AVE @ BLENHEIM ST",
+//                49.234696,-123.178303,"ZN 99", "",0, ""));
+//        testStops.add(new BusStop(381,50377,"EB W 41 AVE FS CARNARVON ST","W 41 AVE @ CARNARVON ST",
+//                49.234677,-123.172505,"ZN 99", "",0, ""));
+//        testStops.add(new BusStop(1269,51259,"NB MACKENZIE ST FS W 38 AVE","MACKENZIE ST @ W 38 AVE",
+//                49.237919,-123.170182,"ZN 99", "",0, ""));
+//        BusNetwork network = new BusNetwork(testStops);
+//
+//        /* Adding edges based on:
+//        9017927, 5:25:00, 5:25:00,646,1,,0,0,
+//        9017927, 5:25:50, 5:25:50,378,2,,0,0,0.3300
+//        9017927, 5:26:28, 5:26:28,379,3,,0,0,0.5780
+//        9017927, 5:27:33, 5:27:33,381,4,,0,0,1.0061
+//        9017927, 5:28:52, 5:28:52,1269,5,,0,0,1.5221
+//        */
+//        network.addConnection(646, 378, 1);
+//        network.addConnection(378, 379, 1);
+//        network.addConnection(379, 381, 1);
+//        network.addConnection(381, 1269, 1);
+//
+//        /* Adding some transfers
+//        646,1907,0,
+//        646,647,0,
+//        1477,1394,2,300
+//        */
+//        network.addConnection(646, 1907, 2);
+//        network.addConnection(646, 647, 2);
+//        network.addConnection(1477, 1394, 3);
+//
+//        // New edge for shortest path test not from files
+//        network.addConnection(647, 1394, 2);
+//        network.addConnection(1394, 100, 2);
+//
+//        // Testing shortest path finding
+//        double[] returnedDistance = new double[1];
+//        int fromStopID = 646;
+//        int toStopID = 100;
+//        ArrayList<Integer> pathTaken = network.getShortestPath(fromStopID, toStopID, returnedDistance);
+//        if(returnedDistance[0] == Double.POSITIVE_INFINITY) {
+//            System.out.println("No route from from " + fromStopID + " to " + toStopID);
+//        }
+//        else {
+//            System.out.println("Distance from " + fromStopID + " to " + toStopID + " is: " + returnedDistance[0]);
+//            System.out.print("Path Taken: ");
+//            for(Integer i : pathTaken)
+//            {
+//                System.out.print(i + " -> ");
+//            }
+//            System.out.println();
+//        }
+//    }
 }
