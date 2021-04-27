@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -11,6 +13,20 @@ public class TripDatabase {
     public TripDatabase()
     {
         database = new ArrayList<>();
+    }
+
+    static public class TripTime
+    {
+        public int hours;
+        public int minutes;
+        public int seconds;
+
+        public TripTime(int hours, int minute, int seconds)
+        {
+            this.hours = hours;
+            this.minutes = minute;
+            this.seconds = seconds;
+        }
     }
 
     //holds one line of the information from stop_times.txt
