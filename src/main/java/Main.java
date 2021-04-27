@@ -7,7 +7,6 @@ public class Main {
     {
         //Vitali is not the smartest guy is he?
         System.out.println("This is a test!");
-        BusStop stop = new BusStop(1, 1, "", "");
         try {
             File myObj = new File("src/main/resources/stops.txt");
             Scanner myReader = new Scanner(myObj);
