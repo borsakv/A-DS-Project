@@ -8,15 +8,15 @@ public class TernarySearchTrie {
     }
 
     // Insert new word into the trie.
-    public void insert(String stopName, float stopId){
+    public void insert(String stopName, int stopId){
         if((stopName != null && !stopName.isEmpty()) && (stopId >= 0))
             insert(stopName, stopId, 0, root);
     }
 
-    private Node insert(String stopName, float stopId, int index, Node node) {
+    private Node insert(String stopName, int stopId, int index, Node node) {
         char ch = stopName.charAt(index);
         if (node == null) node = new Node(ch);
-        node.stopId.add(stopId);
+        node.stopIds.add(stopId);
         if (ch < node.val) node.left = insert(stopName, stopId, index, node.left);
         else if (ch > node.val) node.right = insert(stopName, stopId, index, node.right);
         else if (index < stopName.length() - 1) node.middle = insert(stopName, stopId, index + 1, node.middle);
@@ -28,18 +28,24 @@ public class TernarySearchTrie {
     public ArrayList<BusStop> search(String word){
         if(word == null || word.isEmpty())
             return null;
-        return search(word, 0, root);
+        Node node= search(word, 0, root);
+        /*
+        BusNetwork busNetwork= new BusNetwork();
+        ArrayList<BusStop> busStops= new ArrayList<BusStops>();
+        for(int i= 0; i < node.stopIds.size(); i++)
+            busStops.add(busNetwork.lookup(node.stopIds.get(i)));
+        return busStops;
+         */
+        return null;
     }
 
-    private ArrayList<BusStop> search(String word, int index, Node node){
-        ArrayList<BusStop> busStops= null;
+    private Node search(String word, int index, Node node){
         if (node == null) return null;
         char ch = word.charAt(index);
         if (ch < node.val) return search(word, index, node.left);
         if (ch > node.val) return search(word, index, node.right);
         if (index < word.length() - 1) return search(word, index + 1, node.middle);
-        //return graph.getStopsById(node.stopId);
-        return busStops;
+        return node;
     }
 
     
@@ -47,7 +53,7 @@ public class TernarySearchTrie {
         char val;
         Node left, middle, right;
         boolean end;
-        ArrayList<Float> stopId;
+        ArrayList<Integer> stopIds= new ArrayList<Integer>();
 
         public Node(){ }
 
