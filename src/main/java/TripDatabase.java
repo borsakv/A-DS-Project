@@ -1,9 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
 
 public class TripDatabase {
 
@@ -27,10 +24,10 @@ public class TripDatabase {
         public int stopHeadsign;
         public int pickupType;
         public int dropOffType;
-        public int distTraveled;
+        public float distTraveled;
 
         //a constructor of TripSection to write in the information
-        public TripSection(int tripID, int stopID, TripTime arrivalTime, TripTime departureTime, int stopSequence, int stopHeadsign, int pickupType, int dropOffType, int distTraveled)
+        public TripSection(int tripID, int stopID, TripTime arrivalTime, TripTime departureTime, int stopSequence, int stopHeadsign, int pickupType, int dropOffType, float distTraveled)
         {
             this.tripID = tripID;
             this.stopID = stopID;
@@ -57,27 +54,43 @@ public class TripDatabase {
             //if there isn't a next line it stops
             while(scanner.hasNext())
             {
-                int tripID;
-                int stopID;
+                int tripID = -1;
+                int stopID = -1;
                 String arrivalTimeString;
                 TripTime arrivalTime;
                 String departureTimeString;
                 TripTime departureTime;
-                int stopSequence;
-                int stopHeadsign;
-                int pickupType;
-                int dropOffType;
-                int distTraveled;
+                int stopSequence = -1;
+                int stopHeadsign = -1;
+                int pickupType = -1;
+                int dropOffType = -1;
+                float distTraveled = -1;
                 nextLine = scanner.nextLine();
-                //reads in the next line and splits it by a comma and a space to get the
-                //trip ID and arrival time
+                //reads in the next line and splits it by a comma and a space to get all of the varaibles
                 String[] inputs = nextLine.split(",");
-                tripID = Integer.parseInt(inputs[0]);
-                //arrivalTime = inputs[1];
-                stopID = Integer.parseInt(inputs[3]);
-                //departureTime = inputs[2];
-                //database.add(new TripSection(tripID, stopID, arrivalTime, departureTime));
+                if(!inputs[0].equals(""))
+                    tripID = Integer.parseInt(inputs[0]);
+                arrivalTimeString = inputs[1];
+                arrivalTime = new TripTime(arrivalTimeString);
+                departureTimeString = inputs[2];
+                departureTime= new TripTime(departureTimeString);
+                if(!inputs[3].equals(""))
+                    stopID = Integer.parseInt(inputs[3]);
+                if(!inputs[4].equals(""))
+                    stopSequence= Integer.parseInt(inputs[4]);
+                if(!inputs[5].equals(""))
+                    stopHeadsign= Integer.parseInt(inputs[5]);
+                if(!inputs[6].equals(""))
+                    pickupType= Integer.parseInt(inputs[6]);
+                if(!inputs[7].equals(""))
+                    dropOffType= Integer.parseInt(inputs[7]);
+                if(inputs.length == 9 && !inputs[8].equals(""))
+                    distTraveled= Float.parseFloat(inputs[8]);
+
+                if(arrivalTime.valid || departureTime.valid)
+                    database.add(new TripSection(tripID, stopID, arrivalTime, departureTime, stopSequence, stopHeadsign, pickupType, dropOffType, distTraveled));
             }
+            scanner.close();
 
         } catch (FileNotFoundException e)
         {
@@ -86,20 +99,40 @@ public class TripDatabase {
 
     }
 
-
-    static public class TripTime
-    {
+    // Class to store and parse time from the format (HH:MM:SS) and also to make sure that the time is valid
+    static public class TripTime{
         public int hours;
         public int minutes;
         public int seconds;
+        public boolean valid;
 
-        public TripTime(String time)
-        {
-            updateTime(time);
-        }
+        public TripTime(String time){ updateTime(time); }
 
         public void updateTime(String time){
+            String[] times = time.split(":");
+            int hours = -1;
+            int minutes = -1;
+            int seconds = -1;
+            if(times[0].charAt(0) == ' ')
+                this.hours = Integer.parseInt(Character.toString(times[0].charAt(1)));
+            else
+                this.hours = Integer.parseInt(times[0]);
+            if(times[1].charAt(0) == ' ')
+                this.minutes = Integer.parseInt(Character.toString(times[1].charAt(1)));
+            else
+                this.minutes = Integer.parseInt(times[1]);
+            if(times[2].charAt(0) == ' ')
+                this.seconds = Integer.parseInt(Character.toString(times[2].charAt(1)));
+            else
+                this.seconds = Integer.parseInt(times[2]);
+            checkIfValid();
+        }
 
+        public void checkIfValid(){
+            if(hours < 24 || minutes < 60 || seconds < 60)
+                valid = true;
+            else
+                valid = false;
         }
     }
 }
