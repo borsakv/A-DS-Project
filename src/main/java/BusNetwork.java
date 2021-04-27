@@ -3,6 +3,7 @@
  * bus network - Created by Cian Jinks 26 Apr 22:39
  */
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -33,8 +34,10 @@ public class BusNetwork
 
     public BusNetwork(String stopsPath, String transfersPath) {
         initialise();
+        System.out.println("Reading data files....");
         readStops(stopsPath);
         readTransfers(transfersPath);
+        System.out.println("Done!");
     }
 
     private void initialise()
@@ -79,7 +82,9 @@ public class BusNetwork
                 try {
                     locationType = Integer.parseInt(stopInfo[8]);
                 } catch (NumberFormatException ignored) {}
-                addStop(new BusStop(stopId, stopCode, moveInfo(stopInfo[2]), stopInfo[3], stopLatitude, stopLongitude, stopInfo[6], stopInfo[7], locationType, parentStation));
+                String stopName = moveInfo(stopInfo[2]);
+                addStop(new BusStop(stopId, stopCode, stopName, stopInfo[3], stopLatitude, stopLongitude, stopInfo[6], stopInfo[7], locationType, parentStation));
+                searchTrie.insert(stopName, stopId); // Here we populate the ternary search trie
             }
         } catch (FileNotFoundException e) {
             System.out.println(filename);
@@ -148,6 +153,17 @@ public class BusNetwork
     public BusStop lookup(int stopID)
     {
         return lookupTable.get(stopID);
+    }
+
+    public ArrayList<BusStop> searchTrie(String word)
+    {
+        ArrayList<Integer> stopIDs = searchTrie.search(word);
+        ArrayList<BusStop> result = new ArrayList<>(stopIDs.size());
+        for(Integer id : stopIDs)
+        {
+            result.add(lookup(id));
+        }
+        return result;
     }
 
     // Uses dijkstra since we have no information with which to make an heuristic for something like A*

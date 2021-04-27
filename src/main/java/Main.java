@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    public static BusNetwork network;
+
     @Override
     public void start(Stage stage) {
         String javaVersion = System.getProperty("java.version");
@@ -28,6 +30,13 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        setupNetwork();
         launch();
+    }
+
+    public static void setupNetwork()
+    {
+        network = new BusNetwork("src/main/resources/stops.txt", "src/main/resources/transfers.txt");   // Generate bus network from stops and transfers
+        System.out.println("test");
     }
 }
