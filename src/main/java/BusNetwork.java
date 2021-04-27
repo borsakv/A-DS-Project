@@ -187,18 +187,24 @@ public class BusNetwork
         network.addEdge(646, 647, 2);
         network.addEdge(1477, 1394, 3);
 
+        // New edge for shortest path test not from files
+        network.addEdge(647, 1394, 2);
+        network.addEdge(1394, 100, 2);
+
         // Testing shortest path finding
         double[] returnedDistance = new double[1];
-        ArrayList<Integer> pathTaken = network.getShortestPath(646, 1269, returnedDistance);
+        int fromStopID = 646;
+        int toStopID = 100;
+        ArrayList<Integer> pathTaken = network.getShortestPath(fromStopID, toStopID, returnedDistance);
         if(returnedDistance[0] == Double.POSITIVE_INFINITY) {
-            System.out.println("No route from from 646 to 1269");
+            System.out.println("No route from from " + fromStopID + " to " + toStopID);
         }
         else {
-            System.out.println("Distance from 646 to 1269 is: " + returnedDistance[0]);
+            System.out.println("Distance from " + fromStopID + " to " + toStopID + " is: " + returnedDistance[0]);
             System.out.print("Path Taken: ");
             for(Integer i : pathTaken)
             {
-                System.out.print(i + ", ");
+                System.out.print(i + " -> ");
             }
             System.out.println();
         }
