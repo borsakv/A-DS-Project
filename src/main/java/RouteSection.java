@@ -12,12 +12,12 @@ public class RouteSection {
 
     //holds one line of the information from stop_times.txt
     //has 4 parameters tripID, stopID, arrivalTime, departureTime
-    public class TripSection
+    private class TripSection
     {
-        public int tripID;
-        public int stopID;
-        public String arrivalTime;
-        public String departureTime;
+        private int tripID;
+        private int stopID;
+        private String arrivalTime;
+        private String departureTime;
 
         //a constructor of TripSection to write in the information
         public TripSection(int tripID, int stopID, String arrivalTime, String departureTime)
