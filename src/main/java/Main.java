@@ -22,7 +22,7 @@ public class Main extends Application {
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
         Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        Scene scene = new Scene(new StackPane(l), 640, 480);
+        Scene scene = new Scene(new StackPane(l), 1280, 720);
         stage.setScene(scene);
         stage.show();
     }
