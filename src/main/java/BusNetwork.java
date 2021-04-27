@@ -231,6 +231,18 @@ public class BusNetwork
         return result;
     }
 
+    public static void main(String[] args)
+    {
+        BusNetwork network = new BusNetwork("src/main/resources/stops.txt", "src/main/resources/transfers.txt");   // Generate bus network from stops and transfers
+        // Testing search trie
+        ArrayList<BusStop> stops = network.searchTrie(null);
+        for(BusStop stop : stops)
+        {
+            System.out.println(stop.stopName);
+        }
+        System.out.println("Found " + stops.size() + " stops!");
+    }
+
     // For testing
 //    public static void main(String[] args)
 //    {

@@ -15,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class Main extends Application {
 
     public static BusNetwork network;
@@ -36,7 +38,13 @@ public class Main extends Application {
 
     public static void setupNetwork()
     {
-        network = new BusNetwork("src/main/resources/stops.txt", "src/main/resources/transfers.txt");   // Generate bus network from stops and transfers
-        System.out.println("test");
+        BusNetwork network = new BusNetwork("src/main/resources/stops.txt", "src/main/resources/transfers.txt");   // Generate bus network from stops and transfers
+        // Testing search trie
+        ArrayList<BusStop> stops = network.searchTrie("MA");
+        for(BusStop stop : stops)
+        {
+            System.out.println(stop.stopName);
+        }
+        System.out.println("Found " + stops.size() + " stops!");
     }
 }
