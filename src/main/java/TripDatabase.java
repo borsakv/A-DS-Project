@@ -7,9 +7,9 @@ public class TripDatabase {
     public ArrayList<TripSection> database;
 
     //a constructor of RouteSection needed to initialise the object and ArrayList
-    public TripDatabase() {
+    public TripDatabase(String tripFilePath) {
         database = new ArrayList<>();
-        readTheStopTimeFile();
+        readTheStopTimeFile(tripFilePath);
     }
 
     //holds one line of the information from stop_times.txt
@@ -41,12 +41,12 @@ public class TripDatabase {
         }
     }
 
-    public void readTheStopTimeFile()
+    public void readTheStopTimeFile(String tripFilePath)
     {
         //reads int the file
         String nextLine;
         try {
-            File file = new File("src/main/resources/stop_times.txt");
+            File file = new File(tripFilePath);
             Scanner scanner = new Scanner(file);
 
             //gets the next line to skip the first line with the names of inputs

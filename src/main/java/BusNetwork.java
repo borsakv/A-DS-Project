@@ -34,10 +34,8 @@ public class BusNetwork
 
     public BusNetwork(String stopsPath, String transfersPath) {
         initialise();
-        System.out.println("Reading data files....");
         readStops(stopsPath);
         readTransfers(transfersPath);
-        System.out.println("Done!");
     }
 
     private void initialise()
