@@ -154,8 +154,8 @@ public class UIApp extends Application {
     public static void setupNetwork()
     {
         System.out.println("Reading data files....");
-        network = new BusNetwork("src/main/resources/stops.txt", "src/main/resources/transfers.txt");   // Generate bus network from stops and transfers
-        tripDatabase = new TripDatabase("src/main/resources/stop_times.txt");
+        network = new BusNetwork("stops.txt", "transfers.txt");   // Generate bus network from stops and transfers
+        tripDatabase = new TripDatabase("stop_times.txt");
 
         // Add all the trip connections to the network
         for(TripDatabase.Trip t : tripDatabase.database)

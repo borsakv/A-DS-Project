@@ -6,6 +6,8 @@
 import java.awt.image.AreaAveragingScaleFilter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class BusNetwork
@@ -53,8 +55,7 @@ public class BusNetwork
 
     private void readStops(String filename) {
         try {
-            File file = new File(filename);
-            Scanner scanner = new Scanner(file);
+            Scanner scanner = new Scanner(BusNetwork.class.getResourceAsStream(filename));
             scanner.nextLine();
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine();
@@ -78,9 +79,6 @@ public class BusNetwork
                 addStop(new BusStop(stopId, stopCode, stopName, stopInfo[3], stopLatitude, stopLongitude, stopInfo[6], stopInfo[7], locationType, parentStation));
                 searchTrie.insert(stopName, stopId); // Here we populate the ternary search trie
             }
-        } catch (FileNotFoundException e) {
-            System.out.println(filename);
-            e.printStackTrace();
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } catch (ArrayIndexOutOfBoundsException ignored) {}
@@ -96,8 +94,7 @@ public class BusNetwork
 
     private void readTransfers(String filepath) {
         try {
-            File file = new File(filepath);
-            Scanner scanner = new Scanner(file);
+            Scanner scanner = new Scanner(BusNetwork.class.getResourceAsStream(filepath));
             scanner.nextLine();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

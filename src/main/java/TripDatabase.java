@@ -59,70 +59,63 @@ public class TripDatabase {
     {
         //reads int the file
         String nextLine;
-        try {
-            File file = new File(tripFilePath);
-            Scanner scanner = new Scanner(file);
+        Scanner scanner = new Scanner(TripDatabase.class.getResourceAsStream(tripFilePath));
 
-            //gets the next line to skip the first line with the names of inputs
-            scanner.nextLine();
+        //gets the next line to skip the first line with the names of inputs
+        scanner.nextLine();
 
-            Trip newTrip = new Trip();
-            newTrip.tripID = 9017927;
+        Trip newTrip = new Trip();
+        newTrip.tripID = 9017927;
 
-            //if there isn't a next line it stops
-            while(scanner.hasNext())
-            {
-                int tripID = -1;
-                int stopID = -1;
-                String arrivalTimeString;
-                TripTime arrivalTime;
-                String departureTimeString;
-                TripTime departureTime;
-                int stopSequence = -1;
-                int stopHeadsign = -1;
-                int pickupType = -1;
-                int dropOffType = -1;
-                float distTraveled = -1;
-                nextLine = scanner.nextLine();
-                //reads in the next line and splits it by a comma and a space to get all of the variables
-                String[] inputs = nextLine.split(",");
-                if(!inputs[0].equals(""))
-                    tripID = Integer.parseInt(inputs[0]);
-                arrivalTimeString = inputs[1];
-                arrivalTime = new TripTime(arrivalTimeString);
-                departureTimeString = inputs[2];
-                departureTime= new TripTime(departureTimeString);
-                if(!inputs[3].equals(""))
-                    stopID = Integer.parseInt(inputs[3]);
-                if(!inputs[4].equals(""))
-                    stopSequence= Integer.parseInt(inputs[4]);
-                if(!inputs[5].equals(""))
-                    stopHeadsign= Integer.parseInt(inputs[5]);
-                if(!inputs[6].equals(""))
-                    pickupType= Integer.parseInt(inputs[6]);
-                if(!inputs[7].equals(""))
-                    dropOffType= Integer.parseInt(inputs[7]);
-                if(inputs.length == 9 && !inputs[8].equals(""))
-                    distTraveled= Float.parseFloat(inputs[8]);
-
-                if(arrivalTime.validate() && departureTime.validate())
-                {
-                    // If we are onto a new trip we need to add the previous one to the database and start a new one
-                    if(tripID != newTrip.tripID)
-                    {
-                        database.add(newTrip);
-                        newTrip = new Trip();
-                        newTrip.tripID = tripID;
-                    }
-                    newTrip.trip.add(new TripSection(tripID, stopID, arrivalTime, departureTime, stopSequence, stopHeadsign, pickupType, dropOffType, distTraveled));
-                }
-            }
-            scanner.close();
-
-        } catch (FileNotFoundException e)
+        //if there isn't a next line it stops
+        while(scanner.hasNext())
         {
-            e.printStackTrace();
+            int tripID = -1;
+            int stopID = -1;
+            String arrivalTimeString;
+            TripTime arrivalTime;
+            String departureTimeString;
+            TripTime departureTime;
+            int stopSequence = -1;
+            int stopHeadsign = -1;
+            int pickupType = -1;
+            int dropOffType = -1;
+            float distTraveled = -1;
+            nextLine = scanner.nextLine();
+            //reads in the next line and splits it by a comma and a space to get all of the variables
+            String[] inputs = nextLine.split(",");
+            if(!inputs[0].equals(""))
+                tripID = Integer.parseInt(inputs[0]);
+            arrivalTimeString = inputs[1];
+            arrivalTime = new TripTime(arrivalTimeString);
+            departureTimeString = inputs[2];
+            departureTime= new TripTime(departureTimeString);
+            if(!inputs[3].equals(""))
+                stopID = Integer.parseInt(inputs[3]);
+            if(!inputs[4].equals(""))
+                stopSequence= Integer.parseInt(inputs[4]);
+            if(!inputs[5].equals(""))
+                stopHeadsign= Integer.parseInt(inputs[5]);
+            if(!inputs[6].equals(""))
+                pickupType= Integer.parseInt(inputs[6]);
+            if(!inputs[7].equals(""))
+                dropOffType= Integer.parseInt(inputs[7]);
+            if(inputs.length == 9 && !inputs[8].equals(""))
+                distTraveled= Float.parseFloat(inputs[8]);
+
+            if(arrivalTime.validate() && departureTime.validate())
+            {
+                // If we are onto a new trip we need to add the previous one to the database and start a new one
+                if(tripID != newTrip.tripID)
+                {
+                    database.add(newTrip);
+                    newTrip = new Trip();
+                    newTrip.tripID = tripID;
+                }
+                newTrip.trip.add(new TripSection(tripID, stopID, arrivalTime, departureTime, stopSequence, stopHeadsign, pickupType, dropOffType, distTraveled));
+            }
         }
+        scanner.close();
 
     }
 
