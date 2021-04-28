@@ -1,5 +1,6 @@
 import javafx.application.Preloader;
 import javafx.application.Preloader.StateChangeNotification.Type;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -11,6 +12,8 @@ import javafx.stage.Stage;
 
 public class PreloadData extends Preloader{
     private Stage preloaderStage;
+    public static final int X_SIZE = 1280;
+    public static final int Y_SIZE = 720;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -20,13 +23,15 @@ public class PreloadData extends Preloader{
         loading.setMaxWidth(Region.USE_PREF_SIZE);
         loading.setMaxHeight(Region.USE_PREF_SIZE);
         loading.getChildren().add(new ProgressIndicator());
-        loading.getChildren().add(new Label("Please wait..."));
+        Label label = new Label("Please wait...");
+        label.setAlignment(Pos.CENTER);
+        loading.getChildren().add(label);
 
         BorderPane root = new BorderPane(loading);
         Scene scene = new Scene(root);
 
-        primaryStage.setWidth(800);
-        primaryStage.setHeight(600);
+        primaryStage.setWidth(X_SIZE);
+        primaryStage.setHeight(Y_SIZE);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
