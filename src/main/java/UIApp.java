@@ -192,7 +192,7 @@ public class UIApp extends Application {
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
-        
+
         tableLabel.setAlignment(Pos.TOP_CENTER);
         returnButton.setAlignment(Pos.TOP_RIGHT);
         hbox.getChildren().addAll(tableLabel, returnButton);
@@ -225,7 +225,6 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldHH.setText(newValue.replaceAll("[^\\d]", ""));
         });
-
         pane.add(searchFieldHH, 0,1);
 
         Label searchLabelMM = new Label("  MM  :");
@@ -233,6 +232,10 @@ public class UIApp extends Application {
         TextField searchFieldMM = new TextField();
         searchFieldMM.setPrefWidth(30);
         searchFieldMM.setTextFormatter(formatter1);
+        searchFieldMM.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches("\\d*")) return;
+            searchFieldMM.setText(newValue.replaceAll("[^\\d]", ""));
+        });
         pane.add(searchFieldMM, 1,1);
 
         Label searchLabelSS = new Label("  SS");
@@ -240,17 +243,29 @@ public class UIApp extends Application {
         TextField searchFieldSS = new TextField();
         searchFieldSS.setPrefWidth(30);
         searchFieldSS.setTextFormatter(formatter2);
+        searchFieldSS.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches("\\d*")) return;
+            searchFieldSS.setText(newValue.replaceAll("[^\\d]", ""));
+        });
         pane.add(searchFieldSS, 2,1);
 
         Button enterButton = new Button("Enter");
         pane.add(enterButton, 3, 1);
 
+        Label errorLabel = new Label("Your time input is not a valid, retry again ");
         enterButton.setOnAction((ActionEvent e) -> {
             int hours = Integer.parseInt(searchFieldHH.getText());
             int minutes = Integer.parseInt(searchFieldMM.getText());
             int seconds = Integer.parseInt(searchFieldSS.getText());
-            ArrayList<TripDatabase.Trip> results = new ArrayList<>();
-            results = tripDatabase.searchForArrivalTime(hours,minutes,seconds);
+            if(hours < 24 && minutes < 60 && seconds < 60) {
+                ArrayList<TripDatabase.Trip> results = new ArrayList<>();
+                results = tripDatabase.searchForArrivalTime(hours, minutes, seconds);
+                pane.getChildren().remove(errorLabel);
+            }
+            else{
+
+                pane.add(errorLabel, 4, 4);
+            }
         });
 
         Button returnButton = new Button("Home");
