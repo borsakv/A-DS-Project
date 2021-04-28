@@ -113,6 +113,7 @@ public class UIApp extends Application {
         ShortestPathScene = new Scene(pane, X_SIZE, Y_SIZE);
     }
 
+    //Vitali is working on it
     public void initFindBusStopScene(Stage stage){
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
@@ -129,6 +130,7 @@ public class UIApp extends Application {
         FindBusStopScene = new Scene(pane, X_SIZE, Y_SIZE);
     }
 
+    //Ajchan is working on this
     public void initFindBusByTimeScene(Stage stage){
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
