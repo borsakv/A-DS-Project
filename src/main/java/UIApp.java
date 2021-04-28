@@ -15,14 +15,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import com.sun.javafx.application.LauncherImpl;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ public class UIApp extends Application {
 
     public static BusNetwork network;
     public static TripDatabase tripDatabase;
-    public static final int X_SIZE = 800;
-    public static final int Y_SIZE = 600;
+    public static final int X_SIZE = 1280;
+    public static final int Y_SIZE = 720;
     public static Scene HomePageScene, ShortestPathScene, FindBusStopScene, FindBusByTimeScene;
 
     @Override
@@ -121,54 +121,62 @@ public class UIApp extends Application {
     public void initFindBusStopScene(Stage stage){
         // Vertical box of the screen
         VBox vbox = new VBox();
-        // Horizontal box of the screen
-        HBox hbox = new HBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
 
         Label tableLabel = new Label("Search for Bus Stops by Name");
+        tableLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
         // Creates a table class
         TableView tableView = new TableView();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.prefHeightProperty().bind(stage.heightProperty());
+        tableView.prefWidthProperty().bind(stage.widthProperty());
         // Allow the editing of the table
         tableView.setEditable(true);
 
         // Creates a column in the table with the stopIdProperty which is connected to the BusStop class
         TableColumn stopIdColumn = new TableColumn("ID");
-        stopIdColumn.setMinWidth(100);
+        stopIdColumn.setMinWidth(50);
         stopIdColumn.setCellValueFactory(
                 new PropertyValueFactory<BusStop, Integer>("stopIdProperty"));
 
         // Creates a column in the table with the stopNameProperty which is connected to the BusStop class
         TableColumn stopNameColumn = new TableColumn("Name");
-        stopNameColumn.setMinWidth(100);
+        stopNameColumn.setMinWidth(250);
         stopNameColumn.setCellValueFactory(
                 new PropertyValueFactory<BusStop, String>("stopNameProperty"));
 
         // Creates a column in the table with the stopCodeProperty which is connected to the BusStop class
         TableColumn stopCodeColumn = new TableColumn("Stop Code");
-        stopCodeColumn.setMinWidth(100);
+        stopCodeColumn.setMinWidth(80);
         stopCodeColumn.setCellValueFactory(
                 new PropertyValueFactory<BusStop, Integer>("stopCodeProperty"));
 
         // Creates a column in the table with the stopDescriptionProperty which is connected to the BusStop class
         TableColumn stopDescriptionColumn = new TableColumn("Description");
-        stopDescriptionColumn.setMinWidth(100);
+        stopDescriptionColumn.setMinWidth(350);
         stopDescriptionColumn.setCellValueFactory(
                 new PropertyValueFactory<BusStop, String>("stopDescriptionProperty"));
 
+        TableColumn stopLocationColumn = new TableColumn("Stop Location");
+        stopLocationColumn.setMinWidth(200);
+
         // Creates a column in the table with the stopLongitudeProperty which is connected to the BusStop class
-        TableColumn stopLatitudeColumn = new TableColumn("Latitude");
-        stopLatitudeColumn.setMinWidth(100);
-        stopLatitudeColumn.setCellValueFactory(
+        TableColumn stopLatitudeSubColumn = new TableColumn("Latitude");
+        stopLatitudeSubColumn.setMinWidth(100);
+        stopLatitudeSubColumn.setCellValueFactory(
                 new PropertyValueFactory<BusStop, Double>("stopLatitudeProperty"));
 
         // Creates a column in the table with the stopLongitudeProperty which is connected to the BusStop class
-        TableColumn stopLongitudeColumn = new TableColumn("Longitude");
-        stopLongitudeColumn.setMinWidth(100);
-        stopLongitudeColumn.setCellValueFactory(
+        TableColumn stopLongitudeSubColumn = new TableColumn("Longitude");
+        stopLongitudeSubColumn.setMinWidth(100);
+        stopLongitudeSubColumn.setCellValueFactory(
                 new PropertyValueFactory<BusStop, Double>("stopLongitudeProperty"));
 
+        stopLocationColumn.getColumns().addAll(stopLatitudeSubColumn, stopLongitudeSubColumn);
         // Adds all the columns to the table
-        tableView.getColumns().addAll(stopIdColumn, stopNameColumn, stopCodeColumn, stopDescriptionColumn, stopLatitudeColumn, stopLongitudeColumn);
+        tableView.getColumns().addAll(stopIdColumn, stopNameColumn, stopCodeColumn, stopDescriptionColumn, stopLocationColumn);
 
         // Creates a search bar
         TextField textField = new TextField();
@@ -187,16 +195,15 @@ public class UIApp extends Application {
         });
 
         // Creates a home button
-        Button returnButton = new Button("Home");
-        // Adds a listiner which brings you to the home page once the button is clicked
+        Button returnButton = new Button("Return Home");
+        // Adds a listener which brings you to the home page once the button is clicked
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
+            textField.setText("");
         });
 
-        tableLabel.setAlignment(Pos.TOP_CENTER);
-        returnButton.setAlignment(Pos.TOP_RIGHT);
-        hbox.getChildren().addAll(tableLabel, returnButton);
-        vbox.getChildren().addAll(hbox, textField, tableView);
+        vbox.getChildren().addAll(tableLabel, tableView, textField, returnButton);
+        vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
         FindBusStopScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
