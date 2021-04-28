@@ -31,6 +31,7 @@ public class UIApp extends Application {
     public static TripDatabase tripDatabase;
     public static final int X_SIZE = 800;
     public static final int Y_SIZE = 600;
+    public static Scene HomePageScene, ShortestPathScene, FindBusStopScene, FindBusByTimeScene;
 
     @Override
     public void init() throws Exception {
@@ -75,21 +76,73 @@ public class UIApp extends Application {
         GridPane.setHalignment(teamLabel, HPos.CENTER);
 
         functionalityOneButton.setOnAction((ActionEvent e) ->  {
-            System.out.println("Button 1 was pressed!");
+            stage.setScene(ShortestPathScene);
         });
 
         functionalityTwoButton.setOnAction((ActionEvent e) ->  {
-            System.out.println("Button 2 was pressed!");
+            stage.setScene(FindBusStopScene);
         });
 
         functionalityThreeButton.setOnAction((ActionEvent e) ->  {
-            System.out.println("Button 3 was pressed!");
+            stage.setScene(FindBusByTimeScene);
         });
 
-        Scene scene = new Scene(pane, X_SIZE, Y_SIZE);
+        initShortestPathScene(stage);
+        initFindBusStopScene(stage);
+        initFindBusByTimeScene(stage);
+
+        HomePageScene = new Scene(pane, X_SIZE, Y_SIZE);
         stage.setTitle("Vancouver Bus Network");
-        stage.setScene(scene);
+        stage.setScene(HomePageScene);
         stage.show();
+    }
+
+    public void initShortestPathScene(Stage stage){
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER);
+
+        Label label = new Label("Here goes the UI for the Shortest Path functionality.");
+        pane.add(label, 0, 0);
+        Button returnButton = new Button("Home");
+        pane.add(returnButton, 0, 1);
+
+        returnButton.setOnAction((ActionEvent e) -> {
+            stage.setScene(HomePageScene);
+        });
+
+        ShortestPathScene = new Scene(pane, X_SIZE, Y_SIZE);
+    }
+
+    public void initFindBusStopScene(Stage stage){
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER);
+
+        Label label = new Label("Here goes the UI for the Search Bus Stops by Name functionality.");
+        pane.add(label, 0, 0);
+        Button returnButton = new Button("Home");
+        pane.add(returnButton, 0, 1);
+
+        returnButton.setOnAction((ActionEvent e) -> {
+            stage.setScene(HomePageScene);
+        });
+
+        FindBusStopScene = new Scene(pane, X_SIZE, Y_SIZE);
+    }
+
+    public void initFindBusByTimeScene(Stage stage){
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER);
+
+        Label label = new Label("Here goes the UI for the Search Buses by Time functionality.");
+        pane.add(label, 0, 0);
+        Button returnButton = new Button("Home");
+        pane.add(returnButton, 0, 1);
+
+        returnButton.setOnAction((ActionEvent e) -> {
+            stage.setScene(HomePageScene);
+        });
+
+        FindBusByTimeScene = new Scene(pane, X_SIZE, Y_SIZE);
     }
 
     public static void main(String[] args) {
