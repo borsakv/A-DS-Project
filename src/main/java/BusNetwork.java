@@ -158,6 +158,11 @@ public class BusNetwork
     // Uses dijkstra since we have no information with which to make an heuristic for something like A*
     public ArrayList<Integer> getShortestPath(int fromStopID, int toStopID, double[] r_Distance)
     {
+        if(!lookupTable.containsKey(fromStopID) || !lookupTable.containsKey(toStopID))
+        {
+            return new ArrayList<>();
+        }
+
         HashMap<Integer, Double> distTo = new HashMap<>(adjacencyList.size());
         HashMap<Integer, Integer> prev = new HashMap<>(adjacencyList.size());
         HashSet<Integer> nodeSet = new HashSet<>(adjacencyList.size());
