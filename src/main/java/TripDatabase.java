@@ -172,6 +172,20 @@ public class TripDatabase {
         return result;
     }
 
+    public ArrayList<Trip> searchForArrivalTime(int hours, int minutes, int seconds)
+    {
+        TripTime time = new TripTime(hours, minutes, seconds);
+        ArrayList<Trip> result = new ArrayList<>();
+        for(Trip t : database)
+        {
+            if(binarySearch(t, 0, t.trip.size() - 1, time) != - 1)
+            {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
     private int binarySearch(Trip t, int l, int r, TripTime x)
     {
         if (r >= l)
@@ -205,6 +219,13 @@ public class TripDatabase {
         public int seconds;
 
         public TripTime(String time){ updateTime(time); }
+
+        public TripTime(int hours, int minutes, int seconds)
+        {
+            this.hours = hours;
+            this.minutes = minutes;
+            this.seconds = seconds;
+        }
 
         public void updateTime(String time){
             String[] times = time.split(":");
