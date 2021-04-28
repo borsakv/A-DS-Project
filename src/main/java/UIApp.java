@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 public class UIApp extends Application {
 
     public static BusNetwork network;
-    public static TripDatabase database;
+    public static TripDatabase tripDatabase;
 
     @Override
     public void init() throws Exception {
@@ -44,15 +44,15 @@ public class UIApp extends Application {
     {
         System.out.println("Reading data files....");
         network = new BusNetwork("src/main/resources/stops.txt", "src/main/resources/transfers.txt");   // Generate bus network from stops and transfers
-        database = new TripDatabase("src/main/resources/stop_times.txt");
+        tripDatabase = new TripDatabase("src/main/resources/stop_times.txt");
 
         // Add all the trip connections to the network
-        for(int trip = 1; trip < database.database.size(); trip++)
+        for(TripDatabase.Trip t : tripDatabase.database)
         {
-            TripDatabase.TripSection firstSection = database.database.get(trip - 1);
-            TripDatabase.TripSection secondSection = database.database.get(trip);
-            if(firstSection.tripID == secondSection.tripID)
+            for(int section = 1; section < t.trip.size(); section++)
             {
+                TripDatabase.TripSection firstSection = t.trip.get(section - 1);
+                TripDatabase.TripSection secondSection = t.trip.get(section);
                 network.addConnection(firstSection.stopID, secondSection.stopID, 1);    // Add this part of the trip to the network
             }
         }

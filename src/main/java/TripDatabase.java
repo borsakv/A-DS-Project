@@ -4,12 +4,25 @@ import java.util.*;
 
 public class TripDatabase {
 
-    public ArrayList<TripSection> database;
+    public ArrayList<Trip> database;
 
     //a constructor of RouteSection needed to initialise the object and ArrayList
     public TripDatabase(String tripFilePath) {
         database = new ArrayList<>();
         readTheStopTimeFile(tripFilePath);
+        sortTrips(0, database.size() - 1);
+    }
+
+    // A wrapper for a given trip
+    static public class Trip
+    {
+        public int tripID;
+        public ArrayList<TripSection> trip;
+
+        public Trip()
+        {
+            trip = new ArrayList<>();
+        }
     }
 
     //holds one line of the information from stop_times.txt
@@ -51,6 +64,10 @@ public class TripDatabase {
 
             //gets the next line to skip the first line with the names of inputs
             scanner.nextLine();
+
+            Trip newTrip = new Trip();
+            newTrip.tripID = 9017927;
+
             //if there isn't a next line it stops
             while(scanner.hasNext())
             {
@@ -88,7 +105,16 @@ public class TripDatabase {
                     distTraveled= Float.parseFloat(inputs[8]);
 
                 if(arrivalTime.validate() && departureTime.validate())
-                    database.add(new TripSection(tripID, stopID, arrivalTime, departureTime, stopSequence, stopHeadsign, pickupType, dropOffType, distTraveled));
+                {
+                    // If we are onto a new trip we need to add the previous one to the databse and start a new one
+                    if(tripID != newTrip.tripID)
+                    {
+                        database.add(newTrip);
+                        newTrip = new Trip();
+                        newTrip.tripID = tripID;
+                    }
+                    newTrip.trip.add(new TripSection(tripID, stopID, arrivalTime, departureTime, stopSequence, stopHeadsign, pickupType, dropOffType, distTraveled));
+                }
             }
             scanner.close();
 
@@ -97,6 +123,42 @@ public class TripDatabase {
             e.printStackTrace();
         }
 
+    }
+
+    // Implements quick sort to sort the trips by tripID as we have such a large number of elements
+    private void sortTrips(int start, int end)
+    {
+        int partition = partition(start, end);
+
+        if((partition - 1) > start) {
+            sortTrips(start, partition - 1);
+        }
+        if((partition + 1) < end) {
+            sortTrips(partition + 1, end);
+        }
+    }
+
+    private int partition(int start, int end)
+    {
+        Trip pivot = database.get(end);
+
+        for(int i = start; i < end; i++)
+        {
+            if(database.get(i).tripID < pivot.tripID)
+            {
+                Collections.swap(database, start, i);
+                start++;
+            }
+        }
+
+        Collections.swap(database, start, end);
+
+        return start;
+    }
+
+    public ArrayList<TripSection> searchForArrivalTime(String arrivalTime)
+    {
+        return null;
     }
 
     // Class to store and parse time from the format (HH:MM:SS) and also to make sure that the time is valid
@@ -130,6 +192,11 @@ public class TripDatabase {
             if(hours < 24 && minutes < 60 && seconds < 60)
                 return true;
             return false;
+        }
+
+        public boolean equals(TripTime comparator)
+        {
+            return (this.hours == comparator.hours && this.minutes == comparator.minutes && this.seconds == comparator.seconds);
         }
     }
 }
