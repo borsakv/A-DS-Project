@@ -33,7 +33,7 @@ public class TernarySearchTrie
     {
         char ch = stopName.charAt(index);
         if (node == null) node = new Node(ch);
-        if(ch == node.val) {
+        if(ch == node.val || node == root) {
             node.stopIds.add(stopId);
         }
         if (ch < node.val) node.left = insert(stopName, stopId, index, node.left);
@@ -46,9 +46,12 @@ public class TernarySearchTrie
     // Returns all stops that start with a passed in String
     public ArrayList<Integer> search(String word)
     {
-        if(word == null || word.equals("")) { return new ArrayList<>(); }
+        if(word == null || word.equals("")) { return new ArrayList<>(root.stopIds); }
         Node node = search(word, 0, root);
-        return new ArrayList<>(node.stopIds);
+        if(node != null)
+            return new ArrayList<>(node.stopIds);
+        else
+            return new ArrayList<>();
     }
 
     private Node search(String word, int index, Node node)
