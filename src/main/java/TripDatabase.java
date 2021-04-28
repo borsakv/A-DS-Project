@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class TripDatabase {
@@ -83,7 +84,7 @@ public class TripDatabase {
                 int dropOffType = -1;
                 float distTraveled = -1;
                 nextLine = scanner.nextLine();
-                //reads in the next line and splits it by a comma and a space to get all of the varaibles
+                //reads in the next line and splits it by a comma and a space to get all of the variables
                 String[] inputs = nextLine.split(",");
                 if(!inputs[0].equals(""))
                     tripID = Integer.parseInt(inputs[0]);
@@ -106,7 +107,7 @@ public class TripDatabase {
 
                 if(arrivalTime.validate() && departureTime.validate())
                 {
-                    // If we are onto a new trip we need to add the previous one to the databse and start a new one
+                    // If we are onto a new trip we need to add the previous one to the database and start a new one
                     if(tripID != newTrip.tripID)
                     {
                         database.add(newTrip);
@@ -156,9 +157,45 @@ public class TripDatabase {
         return start;
     }
 
-    public ArrayList<TripSection> searchForArrivalTime(String arrivalTime)
+    // We can use the fact that the trip times are all already in order to use binarySearch
+    public ArrayList<Trip> searchForArrivalTime(String arrivalTime)
     {
-        return null;
+        TripTime time = new TripTime(arrivalTime);
+        ArrayList<Trip> result = new ArrayList<>();
+        for(Trip t : database)
+        {
+            if(binarySearch(t, 0, t.trip.size() - 1, time) != - 1)
+            {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
+    private int binarySearch(Trip t, int l, int r, TripTime x)
+    {
+        if (r >= l)
+        {
+            int mid = l + (r - l) / 2;
+
+            // If the element is present at the middle
+            // itself
+            if (t.trip.get(mid).arrivalTime.compare(x) == 0)
+                return mid;
+
+            // If element is smaller than mid, then
+            // it can only be present in left subarray
+            if (t.trip.get(mid).arrivalTime.compare(x) == 1)
+                return binarySearch(t, l, mid - 1, x);
+
+            // Else the element can only be present
+            // in right subarray
+            return binarySearch(t, mid + 1, r, x);
+        }
+
+        // We reach here when element is not
+        // present in array
+        return -1;
     }
 
     // Class to store and parse time from the format (HH:MM:SS) and also to make sure that the time is valid
@@ -171,9 +208,9 @@ public class TripDatabase {
 
         public void updateTime(String time){
             String[] times = time.split(":");
-            int hours = -1;
-            int minutes = -1;
-            int seconds = -1;
+            this.hours = -1;
+            this.minutes = -1;
+            this.seconds = -1;
             if(times[0].charAt(0) == ' ')
                 this.hours = Integer.parseInt(Character.toString(times[0].charAt(1)));
             else
@@ -194,9 +231,22 @@ public class TripDatabase {
             return false;
         }
 
-        public boolean equals(TripTime comparator)
+        public int compare(TripTime comparator)
         {
-            return (this.hours == comparator.hours && this.minutes == comparator.minutes && this.seconds == comparator.seconds);
+            if(this.hours < comparator.hours) { return -1; }
+            else if(this.hours > comparator.hours) { return 1; }
+            else {
+                if(this.minutes < comparator.minutes) { return -1; }
+                else if(this.minutes > comparator.minutes) { return 1; }
+                else {
+                    return Integer.compare(this.seconds, comparator.seconds);
+                }
+            }
+        }
+
+        public String toString()
+        {
+            return String.format("%d:%d:%d", hours, minutes, seconds);
         }
     }
 }
