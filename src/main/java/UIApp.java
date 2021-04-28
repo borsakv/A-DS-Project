@@ -253,6 +253,7 @@ public class UIApp extends Application {
         pane.add(enterButton, 3, 1);
 
         Label errorLabel = new Label("Your time input is not a valid, retry again ");
+
         enterButton.setOnAction((ActionEvent e) -> {
             int hours = Integer.parseInt(searchFieldHH.getText());
             int minutes = Integer.parseInt(searchFieldMM.getText());
