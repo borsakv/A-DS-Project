@@ -10,6 +10,7 @@
 //}
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -22,6 +23,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import javax.swing.text.LabelView;
+
 public class UIApp extends Application {
 
     public static BusNetwork network;
@@ -31,7 +34,7 @@ public class UIApp extends Application {
 
     @Override
     public void init() throws Exception {
-        //setupNetwork();
+        setupNetwork();
     }
 
     @Override
@@ -52,27 +55,38 @@ public class UIApp extends Application {
         GridPane.setHalignment(descriptionLabel, HPos.CENTER);
 
         Button functionalityOneButton = new Button("Shortest Path");
-        pane.add(functionalityOneButton, 0, Y_SIZE/200 - 1);
+        pane.add(functionalityOneButton, 0, 2);
         //GridPane.setValignment(functionalityOneButton, VPos.CENTER);
         GridPane.setHalignment(functionalityOneButton, HPos.CENTER);
 
         Button functionalityTwoButton = new Button("Find Bus Stop");
-        pane.add(functionalityTwoButton, 0, Y_SIZE/200);
+        pane.add(functionalityTwoButton, 0, 3);
         //GridPane.setValignment(functionalityTwoButton, VPos.TOP);
         GridPane.setHalignment(functionalityTwoButton, HPos.CENTER);
 
         Button functionalityThreeButton = new Button("Find Buses by Time");
-        pane.add(functionalityThreeButton, 0, Y_SIZE/200 + 1);
+        pane.add(functionalityThreeButton, 0, 4);
         //GridPane.setValignment(functionalityThreeButton, VPos.TOP);
         GridPane.setHalignment(functionalityThreeButton, HPos.CENTER);
 
         Label teamLabel = new Label("Team: Cian Jinks, Ajchan Mamedov, James Cowan, Vitali Borsak");
-        pane.add(teamLabel, 0, Y_SIZE);
+        pane.add(teamLabel, 0, 5);
         //GridPane.setValignment(teamLabel, VPos.BOTTOM);
         GridPane.setHalignment(teamLabel, HPos.CENTER);
 
+        functionalityOneButton.setOnAction((ActionEvent e) ->  {
+            System.out.println("Button 1 was pressed!");
+        });
 
-        Scene scene = new Scene(pane, X_SIZE, Y_SIZE/200 + 2);
+        functionalityTwoButton.setOnAction((ActionEvent e) ->  {
+            System.out.println("Button 2 was pressed!");
+        });
+
+        functionalityThreeButton.setOnAction((ActionEvent e) ->  {
+            System.out.println("Button 3 was pressed!");
+        });
+
+        Scene scene = new Scene(pane, X_SIZE, Y_SIZE);
         stage.setTitle("Vancouver Bus Network");
         stage.setScene(scene);
         stage.show();
