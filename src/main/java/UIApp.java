@@ -12,6 +12,7 @@
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -134,6 +135,8 @@ public class UIApp extends Application {
         Button returnButton = new Button("Home");
 
         // Stop display functionality
+        ObservableList arr = FXCollections.observableArrayList(stops);
+        ListView<Integer> stopView = new ListView<>();
 
 
         pane.add(returnButton, 0, 0);
