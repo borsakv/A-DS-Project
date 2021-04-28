@@ -26,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class UIApp extends Application {
 
@@ -245,10 +247,71 @@ public class UIApp extends Application {
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
 
-        Label label = new Label("Here goes the UI for the Search Buses by Time functionality.");
-        pane.add(label, 0, 0);
+        Pattern pattern = Pattern.compile(".{0,2}");
+        TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+        });
+        TextFormatter formatter1 = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+        });
+        TextFormatter formatter2 = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+        });
+
+        Label searchLabelHH = new Label("  HH  :");
+        pane.add(searchLabelHH, 0, 0);
+        TextField searchFieldHH = new TextField();
+        searchFieldHH.setPrefWidth(30);
+        searchFieldHH.setTextFormatter(formatter);
+        searchFieldHH.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches("\\d*")) return;
+            searchFieldHH.setText(newValue.replaceAll("[^\\d]", ""));
+        });
+        pane.add(searchFieldHH, 0,1);
+
+        Label searchLabelMM = new Label("  MM  :");
+        pane.add(searchLabelMM, 1, 0);
+        TextField searchFieldMM = new TextField();
+        searchFieldMM.setPrefWidth(30);
+        searchFieldMM.setTextFormatter(formatter1);
+        searchFieldMM.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches("\\d*")) return;
+            searchFieldMM.setText(newValue.replaceAll("[^\\d]", ""));
+        });
+        pane.add(searchFieldMM, 1,1);
+
+        Label searchLabelSS = new Label("  SS");
+        pane.add(searchLabelSS, 2, 0);
+        TextField searchFieldSS = new TextField();
+        searchFieldSS.setPrefWidth(30);
+        searchFieldSS.setTextFormatter(formatter2);
+        searchFieldSS.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches("\\d*")) return;
+            searchFieldSS.setText(newValue.replaceAll("[^\\d]", ""));
+        });
+        pane.add(searchFieldSS, 2,1);
+
+        Button enterButton = new Button("Enter");
+        pane.add(enterButton, 3, 1);
+
+        Label errorLabel = new Label("Your time input is not a valid, retry again ");
+        enterButton.setOnAction((ActionEvent e) -> {
+            int hours = Integer.parseInt(searchFieldHH.getText());
+            int minutes = Integer.parseInt(searchFieldMM.getText());
+            int seconds = Integer.parseInt(searchFieldSS.getText());
+            if(hours < 24 && minutes < 60 && seconds < 60) {
+                ArrayList<TripDatabase.Trip> results = new ArrayList<>();
+                results = tripDatabase.searchForArrivalTime(hours, minutes, seconds);
+                pane.getChildren().remove(errorLabel);
+            }
+            else{
+
+                pane.add(errorLabel, 4, 4);
+            }
+        });
+
         Button returnButton = new Button("Home");
-        pane.add(returnButton, 0, 1);
+        pane.add(returnButton, 3, 2);
 
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
