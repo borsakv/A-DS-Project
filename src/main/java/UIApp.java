@@ -12,7 +12,8 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import com.sun.javafx.application.LauncherImpl;
 import javafx.stage.Stage;
 
 public class UIApp extends Application {
@@ -20,17 +21,22 @@ public class UIApp extends Application {
     public static BusNetwork network;
 
     @Override
-    public void start(Stage stage) {
-        Label l = new Label("Loading datafiles....");
-        Scene scene = new Scene(new StackPane(l), 1280, 720);
+    public void init() throws Exception {
+        setupNetwork();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        BorderPane root = new BorderPane(new Label("Loading complete!"));
+        Scene scene = new Scene(root);
+        stage.setWidth(800);
+        stage.setHeight(600);
         stage.setScene(scene);
         stage.show();
-        System.out.println("Loading datafiles");
     }
 
     public static void main(String[] args) {
-        setupNetwork();
-        launch();
+        LauncherImpl.launchApplication(UIApp.class, PreloadData.class, args);
     }
 
     public static void setupNetwork()
@@ -48,5 +54,6 @@ public class UIApp extends Application {
                 network.addConnection(firstSection.stopID, secondSection.stopID, 1);    // Add this part of the trip to the network
             }
         }
+        System.out.println("It works Cian!");
     }
 }
