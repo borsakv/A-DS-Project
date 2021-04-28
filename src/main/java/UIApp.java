@@ -122,6 +122,8 @@ public class UIApp extends Application {
             }
         });
         Button searchButton = new Button("Search");
+        ListView<Integer> stopView = new ListView<>();
+
 
         searchButton.setOnAction(new EventHandler<>() {
             @Override
@@ -132,19 +134,18 @@ public class UIApp extends Application {
                 int end = Integer.parseInt(endField.getText());
                 ArrayList<Integer> route =  network.getShortestPath(start, end, distance);
                 stops.addAll(route);
+                ObservableList<Integer> observableStops = FXCollections.observableArrayList(stops);
+                stopView.setItems(observableStops);
+                stopView.autosize();
             }
         });
         Button returnButton = new Button("Home");
-
         // Stop display functionality
-        ObservableList arr = FXCollections.observableArrayList(stops);
-        ListView<Integer> stopView = new ListView<>();
-
-
         pane.add(returnButton, 0, 0);
         pane.add(startField, 1,1);
         pane.add(endField, 2,1);
         pane.add(searchButton, 3,1);
+        pane.add(stopView, 2, 2);
 
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
