@@ -1,5 +1,4 @@
 TODO:
-Link together backend and implemented functionality 3 - Cian Jinks
-TST UI - Vitali Borsak
+UI - Vitali Borsak
 General UI - James Cowan
 General UI - Ajchan Mamedov
