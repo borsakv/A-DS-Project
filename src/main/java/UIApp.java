@@ -9,24 +9,22 @@
 //    }
 //}
 
+import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import com.sun.javafx.application.LauncherImpl;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class UIApp extends Application {
 
@@ -101,13 +99,47 @@ public class UIApp extends Application {
     }
 
     public void initShortestPathScene(Stage stage){
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
+        ArrayList<Integer> stops = new ArrayList<>();
+        double[] distance = new double[1];
 
-        Label label = new Label("Here goes the UI for the Shortest Path functionality.");
-        pane.add(label, 0, 0);
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.TOP_LEFT);
+        TextField startField = new TextField();
+        startField.setPromptText("From");
+        startField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                startField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        TextField endField = new TextField();
+        endField.setPromptText("To");
+        endField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                endField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+        Button searchButton = new Button("Search");
+
+        searchButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent event) {
+                stops.clear();
+                distance[0] = -1.0;
+                int start = Integer.parseInt(startField.getText());
+                int end = Integer.parseInt(endField.getText());
+                ArrayList<Integer> route =  network.getShortestPath(start, end, distance);
+                stops.addAll(route);
+            }
+        });
         Button returnButton = new Button("Home");
-        pane.add(returnButton, 0, 1);
+
+        // Stop display functionality
+
+
+        pane.add(returnButton, 0, 0);
+        pane.add(startField, 1,1);
+        pane.add(endField, 2,1);
+        pane.add(searchButton, 3,1);
 
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
