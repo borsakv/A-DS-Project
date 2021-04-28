@@ -10,20 +10,23 @@
 //}
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import com.sun.javafx.application.LauncherImpl;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import javax.swing.text.LabelView;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UIApp extends Application {
 
@@ -113,24 +116,89 @@ public class UIApp extends Application {
         ShortestPathScene = new Scene(pane, X_SIZE, Y_SIZE);
     }
 
-    //Vitali is working on it
     public void initFindBusStopScene(Stage stage){
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
+        // Vertical box of the screen
+        VBox vbox = new VBox();
+        // Horizontal box of the screen
+        HBox hbox = new HBox();
 
-        Label label = new Label("Here goes the UI for the Search Bus Stops by Name functionality.");
-        pane.add(label, 0, 0);
+        Label tableLabel = new Label("Search for Bus Stops by Name");
+
+        // Creates a table class
+        TableView tableView = new TableView();
+        // Allow the editing of the table
+        tableView.setEditable(true);
+
+        // Creates a column in the table with the stopIdProperty which is connected to the BusStop class
+        TableColumn stopIdColumn = new TableColumn("ID");
+        stopIdColumn.setMinWidth(100);
+        stopIdColumn.setCellValueFactory(
+                new PropertyValueFactory<BusStop, Integer>("stopIdProperty"));
+
+        // Creates a column in the table with the stopNameProperty which is connected to the BusStop class
+        TableColumn stopNameColumn = new TableColumn("Name");
+        stopNameColumn.setMinWidth(100);
+        stopNameColumn.setCellValueFactory(
+                new PropertyValueFactory<BusStop, String>("stopNameProperty"));
+
+        // Creates a column in the table with the stopCodeProperty which is connected to the BusStop class
+        TableColumn stopCodeColumn = new TableColumn("Stop Code");
+        stopCodeColumn.setMinWidth(100);
+        stopCodeColumn.setCellValueFactory(
+                new PropertyValueFactory<BusStop, Integer>("stopCodeProperty"));
+
+        // Creates a column in the table with the stopDescriptionProperty which is connected to the BusStop class
+        TableColumn stopDescriptionColumn = new TableColumn("Description");
+        stopDescriptionColumn.setMinWidth(100);
+        stopDescriptionColumn.setCellValueFactory(
+                new PropertyValueFactory<BusStop, String>("stopDescriptionProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the BusStop class
+        TableColumn stopLatitudeColumn = new TableColumn("Latitude");
+        stopLatitudeColumn.setMinWidth(100);
+        stopLatitudeColumn.setCellValueFactory(
+                new PropertyValueFactory<BusStop, Double>("stopLatitudeProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the BusStop class
+        TableColumn stopLongitudeColumn = new TableColumn("Longitude");
+        stopLongitudeColumn.setMinWidth(100);
+        stopLongitudeColumn.setCellValueFactory(
+                new PropertyValueFactory<BusStop, Double>("stopLongitudeProperty"));
+
+        // Adds all the columns to the table
+        tableView.getColumns().addAll(stopIdColumn, stopNameColumn, stopCodeColumn, stopDescriptionColumn, stopLatitudeColumn, stopLongitudeColumn);
+
+        // Creates a search bar
+        TextField textField = new TextField();
+        textField.setPromptText("Search");
+        // Populates the table with all the stops
+        tableView.setItems(FXCollections.observableArrayList(network.searchTrie("")));
+        // Automatically change the lowercase values to uppercase since all stop names are uppercase
+        textField.setTextFormatter(new TextFormatter<>((change) -> {
+            change.setText(change.getText().toUpperCase());
+            return change;
+        }));
+        // Updates the contents of the table with whatever is inputted into the search bar
+        textField.textProperty().addListener((obs, newValue, oldValue) -> {
+            ArrayList<BusStop> matchedNames = network.searchTrie(newValue);
+            tableView.setItems(FXCollections.observableArrayList(matchedNames));
+        });
+
+        // Creates a home button
         Button returnButton = new Button("Home");
-        pane.add(returnButton, 0, 1);
-
+        // Adds a listiner which brings you to the home page once the button is clicked
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
+        
+        tableLabel.setAlignment(Pos.TOP_CENTER);
+        returnButton.setAlignment(Pos.TOP_RIGHT);
+        hbox.getChildren().addAll(tableLabel, returnButton);
+        vbox.getChildren().addAll(hbox, textField, tableView);
 
-        FindBusStopScene = new Scene(pane, X_SIZE, Y_SIZE);
+        FindBusStopScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
 
-    //Ajchan is working on this
     public void initFindBusByTimeScene(Stage stage){
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
