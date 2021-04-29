@@ -130,6 +130,7 @@ public class UIApp extends Application {
         HomePageScene = new Scene(vbox, X_SIZE, Y_SIZE);
         stage.setTitle("Vancouver Bus Network");
         stage.setScene(HomePageScene);
+        stage.getIcons().add(new Image("bus.png"));
         stage.show();
     }
 
@@ -277,7 +278,7 @@ public class UIApp extends Application {
         VBox content = new VBox(20, title, vBox, bottomButtons);
         content.setAlignment(Pos.TOP_CENTER);
         content.setPadding(new Insets(20));
-
+        content.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
@@ -393,8 +394,38 @@ public class UIApp extends Application {
     }
 
     public void initFindBusByTimeScene(Stage stage){
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(5, 5, 5, 5));
+        vbox.setAlignment(Pos.TOP_CENTER);
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        hbox.setPadding(new Insets(5, 5, 5, 5));
+        hbox.setAlignment(Pos.TOP_CENTER);
+
+        VBox hourVBox = new VBox();
+        hourVBox.setSpacing(5);
+        hourVBox.setPadding(new Insets(5, 5, 5, 5));
+        hourVBox.setAlignment(Pos.TOP_CENTER);
+
+        VBox minuteVBox = new VBox();
+        minuteVBox.setSpacing(5);
+        minuteVBox.setPadding(new Insets(5, 5, 5, 5));
+        minuteVBox.setAlignment(Pos.TOP_CENTER);
+
+        VBox secondVBox = new VBox();
+        secondVBox.setSpacing(5);
+        secondVBox.setPadding(new Insets(5, 5, 5, 5));
+        secondVBox.setAlignment(Pos.TOP_CENTER);
+
+        VBox buttonsVBox = new VBox();
+        buttonsVBox.setSpacing(5);
+        buttonsVBox.setPadding(new Insets(5, 5, 5, 5));
+        buttonsVBox.setAlignment(Pos.TOP_CENTER);
+
+        Label titleLabel = new Label("Search Stops by Arrival Time");
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
         Pattern pattern = Pattern.compile(".{0,2}");
         TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
@@ -408,7 +439,7 @@ public class UIApp extends Application {
         });
 
         Label searchLabelHH = new Label("  HH  :");
-        pane.add(searchLabelHH, 0, 0);
+
         TextField searchFieldHH = new TextField();
         searchFieldHH.setPrefWidth(30);
         searchFieldHH.setTextFormatter(formatter);
@@ -416,10 +447,9 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldHH.setText(newValue.replaceAll("[^\\d]", ""));
         });
-        pane.add(searchFieldHH, 0,1);
 
         Label searchLabelMM = new Label("  MM  :");
-        pane.add(searchLabelMM, 1, 0);
+
         TextField searchFieldMM = new TextField();
         searchFieldMM.setPrefWidth(30);
         searchFieldMM.setTextFormatter(formatter1);
@@ -427,10 +457,9 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldMM.setText(newValue.replaceAll("[^\\d]", ""));
         });
-        pane.add(searchFieldMM, 1,1);
 
         Label searchLabelSS = new Label("  SS");
-        pane.add(searchLabelSS, 2, 0);
+
         TextField searchFieldSS = new TextField();
         searchFieldSS.setPrefWidth(30);
         searchFieldSS.setTextFormatter(formatter2);
@@ -438,10 +467,8 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldSS.setText(newValue.replaceAll("[^\\d]", ""));
         });
-        pane.add(searchFieldSS, 2,1);
 
         Button enterButton = new Button("Enter");
-        pane.add(enterButton, 3, 1);
 
         Label errorLabel = new Label("Your time input is not a valid, retry again ");
         enterButton.setOnAction((ActionEvent e) -> {
@@ -451,12 +478,12 @@ public class UIApp extends Application {
             if(hours < 24 && minutes < 60 && seconds < 60) {
                 results = new ArrayList<>();
                 results = tripDatabase.searchForArrivalTime(hours, minutes, seconds);
-                pane.getChildren().remove(errorLabel);
+                vbox.getChildren().remove(errorLabel);
                 initFindBusByTimeSecondScene(stage);
                 stage.setScene(FindBusByTimeSecondScene);
             }
             else{
-                pane.add(errorLabel, 4, 4);
+                vbox.getChildren().add(errorLabel);
             }
             searchFieldHH.setText("");
             searchFieldMM.setText("");
@@ -464,13 +491,19 @@ public class UIApp extends Application {
         });
 
         Button returnButton = new Button("Home");
-        pane.add(returnButton, 3, 2);
-
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
 
-        FindBusByTimeScene = new Scene(pane, X_SIZE, Y_SIZE);
+        hourVBox.getChildren().addAll(searchLabelHH, searchFieldHH);
+        minuteVBox.getChildren().addAll(searchLabelMM, searchFieldMM);
+        buttonsVBox.getChildren().addAll(enterButton, returnButton);
+        secondVBox.getChildren().addAll(searchLabelSS, searchFieldSS);
+        hbox.getChildren().addAll(hourVBox, minuteVBox, secondVBox, buttonsVBox);
+        vbox.getChildren().addAll(titleLabel, hbox);
+        vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        FindBusByTimeScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
 
     public void initFindBusByTimeSecondScene(Stage stage){
