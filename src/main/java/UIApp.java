@@ -427,6 +427,7 @@ public class UIApp extends Application {
         Label titleLabel = new Label("Search Stops by Arrival Time");
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
+        //limits the numbers you can enter
         Pattern pattern = Pattern.compile(".{0,2}");
         TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
             return pattern.matcher(change.getControlNewText()).matches() ? change : null;
@@ -440,6 +441,7 @@ public class UIApp extends Application {
 
         Label searchLabelHH = new Label("  HH  :");
 
+        //hour search field
         TextField searchFieldHH = new TextField();
         searchFieldHH.setPrefWidth(30);
         searchFieldHH.setTextFormatter(formatter);
@@ -450,6 +452,7 @@ public class UIApp extends Application {
 
         Label searchLabelMM = new Label("  MM  :");
 
+        //minute search field
         TextField searchFieldMM = new TextField();
         searchFieldMM.setPrefWidth(30);
         searchFieldMM.setTextFormatter(formatter1);
@@ -458,8 +461,9 @@ public class UIApp extends Application {
             searchFieldMM.setText(newValue.replaceAll("[^\\d]", ""));
         });
 
-        Label searchLabelSS = new Label("  SS");
+        Label searchLabelSS = new Label("  SS   ");
 
+        //seconds search field
         TextField searchFieldSS = new TextField();
         searchFieldSS.setPrefWidth(30);
         searchFieldSS.setTextFormatter(formatter2);
@@ -471,6 +475,7 @@ public class UIApp extends Application {
         Button enterButton = new Button("Enter");
 
         Label errorLabel = new Label("Your time input is not a valid, retry again ");
+        //displaying when the button is pressed
         enterButton.setOnAction((ActionEvent e) -> {
             int hours = Integer.parseInt(searchFieldHH.getText());
             int minutes = Integer.parseInt(searchFieldMM.getText());
@@ -523,55 +528,55 @@ public class UIApp extends Application {
         // Allow the editing of the table
         tableView.setEditable(true);
 
-        // Creates a column in the table with the stopIdProperty which is connected to the TripSection class
+        // Creates a column in the table with the tripIDProperty which is connected to the TripSection class
         TableColumn TripIdColumn = new TableColumn("Trip ID");
         TripIdColumn.setMinWidth(100);
         TripIdColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Integer>("tripIDProperty"));
 
-        // Creates a column in the table with the stopNameProperty which is connected to the TripSection class
+        // Creates a column in the table with the stopIDProperty which is connected to the TripSection class
         TableColumn stopIdColumn = new TableColumn("Stop Id");
         stopIdColumn.setMinWidth(100);
         stopIdColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, String>("stopIDProperty"));
 
-        // Creates a column in the table with the stopCodeProperty which is connected to the TripSection class
+        // Creates a column in the table with the arrivalTimeProperty which is connected to the TripSection class
         TableColumn arrivalTimeColumn = new TableColumn("Arrival time");
         arrivalTimeColumn.setMinWidth(100);
         arrivalTimeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Integer>("arrivalTimeProperty"));
 
-        // Creates a column in the table with the stopDescriptionProperty which is connected to the TripSection class
+        // Creates a column in the table with the departureTimeProperty which is connected to the TripSection class
         TableColumn departureTimeColumn = new TableColumn("Departure time");
         departureTimeColumn.setMinWidth(100);
         departureTimeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, String>("departureTimeProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the stopSequenceProperty which is connected to the TripSection class
         TableColumn stopSequenceColumn = new TableColumn("Stop sequence");
         stopSequenceColumn.setMinWidth(100);
         stopSequenceColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Integer>("stopSequenceProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the stopHeadsignProperty which is connected to the TripSection class
         TableColumn stopHeadsignColumn = new TableColumn("Stop Headsign");
         stopHeadsignColumn.setMinWidth(100);
         stopHeadsignColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Double>("stopHeadsignProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the pickupTypeProperty which is connected to the TripSection class
         TableColumn stopPickupTypeColumn = new TableColumn("Pickup type");
         stopPickupTypeColumn.setMinWidth(100);
         stopPickupTypeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Double>("pickupTypeProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the dropOffTypeProperty which is connected to the TripSection class
         TableColumn dropOffTypeColumn = new TableColumn("Drop off type");
         dropOffTypeColumn.setMinWidth(100);
         dropOffTypeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Double>("dropOffTypeProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the distTraveledProperty which is connected to the TripSection class
         TableColumn distTraveledColumn = new TableColumn("Distance traveled");
         distTraveledColumn.setMinWidth(100);
         distTraveledColumn.setCellValueFactory(
@@ -581,6 +586,7 @@ public class UIApp extends Application {
         tableView.getColumns().addAll(TripIdColumn, stopIdColumn, arrivalTimeColumn, departureTimeColumn,
                 stopSequenceColumn, stopHeadsignColumn, stopPickupTypeColumn, dropOffTypeColumn, distTraveledColumn);
 
+        //fill the table with ArrayList with TripSection information
         if(results!=null) {
             ArrayList<TripDatabase.TripSection> data = new ArrayList<>();
             for (int i = 0; i < results.size(); i++) {
