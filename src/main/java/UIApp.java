@@ -169,7 +169,7 @@ public class UIApp extends Application {
         Label JamesName = new Label("James Cowan:");
         JamesName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         Label JamesDescription = new Label("James Cowan worked on both the front-end and back-end, he worked on reading and parsing the" +
-                "transfer file. He worked on functionality 1 UI (display the shortest distance between two stops) also.");
+                "transfer and stops files. He worked on functionality 1 UI (display the shortest distance between two stops) also.");
         JamesCowan.getChildren().addAll(JamesName, JamesDescription);
 
         VBox VitaliBorsak = new VBox();
