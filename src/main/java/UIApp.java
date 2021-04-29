@@ -252,7 +252,6 @@ public class UIApp extends Application {
                 distanceLabel.setVisible(true);
                 stopView.setVisible(true);
                 invalidSearchLabel.setVisible(false);
-                distanceLabel.setText("Total trip distance of: " + distance[0]);
                 stops.clear();
                 distance[0] = -1.0;
                 int start = Integer.parseInt(startField.getText());
@@ -261,6 +260,7 @@ public class UIApp extends Application {
                 stops.addAll(route);
                 ObservableList<Integer> observableStops = FXCollections.observableArrayList(stops);
                 stopView.setItems(observableStops);
+                distanceLabel.setText(String.format("Total trip distance of: %.1f", distance[0]));
                 if (distance[0] == -1) {
                     stopView.setVisible(false);
                     invalidSearchLabel.setVisible(true);
