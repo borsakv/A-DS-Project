@@ -92,7 +92,7 @@ public class UIApp extends Application {
         Button functionalityThreeButton = new Button("Find Buses by Time");
         functionalityThreeButton.setStyle("-fx-font-size: 16px;");
         Label buttonThreeLabel = new Label("This button will bring you to a page where you are given a prompt to fill in an arrival time" +
-                " which once you do this,\nwill display a table with all routes that have an arrival time equal to the one you will input.");
+                ", once you do this\nit will display a table with all routes that contain an arrival time equal to the one you input.");
         VBox buttonThree = new VBox();
         buttonThree.setSpacing(5);
         buttonThree.setPadding(new Insets(10, 10, 180, 10));
