@@ -15,13 +15,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -192,12 +192,30 @@ public class UIApp extends Application {
         TeamInfoScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
 
+    static class StopCell extends ListCell<Integer> {
+        @Override
+        protected void updateItem(Integer item, boolean empty) {
+
+            Image image = new Image("Stop.png");
+            super.updateItem(item, empty);
+            if (getIndex() == 0) {
+                image = new Image("FirstStop.png");
+            } else if (false) {
+                image = new Image("LastStop.png");
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(30);
+            imageView.setPreserveRatio(true);
+            HBox box = new HBox(20, imageView, new Label(String.valueOf(item)));
+            setGraphic(box);
+
+        }
+    }
     public void initShortestPathScene(Stage stage){
         ArrayList<Integer> stops = new ArrayList<>();
         double[] distance = new double[1];
-
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.TOP_LEFT);
+        Label title = new Label("Find Stops Between Start to End");
+        title.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
         TextField startField = new TextField();
         startField.setPromptText("From");
         startField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -214,7 +232,7 @@ public class UIApp extends Application {
         });
         Button searchButton = new Button("Search");
         ListView<Integer> stopView = new ListView<>();
-
+        stopView.setCellFactory(stopCell -> new StopCell());
 
         searchButton.setOnAction(new EventHandler<>() {
             @Override
@@ -227,22 +245,22 @@ public class UIApp extends Application {
                 stops.addAll(route);
                 ObservableList<Integer> observableStops = FXCollections.observableArrayList(stops);
                 stopView.setItems(observableStops);
-                stopView.autosize();
             }
         });
-        Button returnButton = new Button("Home");
-        // Stop display functionality
-        pane.add(returnButton, 0, 0);
-        pane.add(startField, 1,1);
-        pane.add(endField, 2,1);
-        pane.add(searchButton, 3,1);
-        pane.add(stopView, 2, 2);
+        Button returnButton = new Button("Back");
+        HBox searchBox = new HBox(20, startField, endField, searchButton);
+        VBox vBox = new VBox(20, searchBox, stopView);
+        vBox.setAlignment(Pos.CENTER);
+        HBox bottomButtons = new HBox(20, returnButton);
+        VBox content = new VBox(20, title, vBox, bottomButtons);
+        content.setAlignment(Pos.TOP_CENTER);
+        content.setPadding(new Insets(20));
 
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
 
-        ShortestPathScene = new Scene(pane, X_SIZE, Y_SIZE);
+        ShortestPathScene = new Scene(content, X_SIZE, Y_SIZE);
     }
 
     public void initFindBusStopScene(Stage stage){
