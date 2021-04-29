@@ -21,6 +21,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -35,7 +36,7 @@ public class UIApp extends Application {
     public static TripDatabase tripDatabase;
     public static final int X_SIZE = 1280;
     public static final int Y_SIZE = 720;
-    public static Scene HomePageScene, ShortestPathScene, FindBusStopScene, FindBusByTimeScene;
+    public static Scene HomePageScene, ShortestPathScene, FindBusStopScene, FindBusByTimeScene, TeamInfoScene;
 
     @Override
     public void init() throws Exception {
@@ -44,40 +45,64 @@ public class UIApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        GridPane pane = new GridPane();
-        pane.setHgap(10);
-        pane.setVgap(10);
-        pane.setAlignment(Pos.CENTER);
+        VBox vbox = new VBox();
+        vbox.setSpacing(Y_SIZE/4);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+        vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        VBox vboxTitle = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+        vboxTitle.setAlignment(Pos.TOP_CENTER);
 
         Label titleLabel = new Label("Welcome to the Vancouver Bus Network App");
-        pane.add(titleLabel, 0, 0);
-        //GridPane.setValignment(titleLabel, VPos.TOP);
-        GridPane.setHalignment(titleLabel, HPos.CENTER);
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
-        Label descriptionLabel = new Label("//TODO (Description of software goes here)");
-        pane.add(descriptionLabel, 0, 1);
-        //GridPane.setValignment(descriptionLabel, VPos.TOP);
-        GridPane.setHalignment(descriptionLabel, HPos.CENTER);
+        Label descriptionLabel = new Label("This application gives the user access to the Vancouver Bus Network featuring a variety of" +
+                "\nfunctionality giving them knowledge on which busses to take to get around the city.");
+
+        VBox vboxButtons = new VBox();
+        vboxButtons.setSpacing(5);
+        vboxButtons.setPadding(new Insets(10, 10, 10, 10));
+        vboxButtons.setAlignment(Pos.CENTER);
 
         Button functionalityOneButton = new Button("Shortest Path");
-        pane.add(functionalityOneButton, 0, 2);
-        //GridPane.setValignment(functionalityOneButton, VPos.CENTER);
-        GridPane.setHalignment(functionalityOneButton, HPos.CENTER);
+        functionalityOneButton.setStyle("-fx-font-size: 16px;");
+        Label buttonOneLabel = new Label("This button will bring you to a page where you are given the functionality to search two stop" +
+                "\nIDs and the program will display the shortest path between these two bus stops.");
+        VBox buttonOne = new VBox();
+        buttonOne.setSpacing(5);
+        buttonOne.setPadding(new Insets(10, 10, 50, 10));
+        buttonOne.getChildren().addAll(functionalityOneButton, buttonOneLabel);
+        buttonOne.setAlignment(Pos.CENTER);
 
         Button functionalityTwoButton = new Button("Find Bus Stop");
-        pane.add(functionalityTwoButton, 0, 3);
-        //GridPane.setValignment(functionalityTwoButton, VPos.TOP);
-        GridPane.setHalignment(functionalityTwoButton, HPos.CENTER);
+        functionalityTwoButton.setStyle("-fx-font-size: 16px;");
+        Label buttonTwoLabel = new Label("This button will bring you to a page where you are given a table of all bus stops, you then" +
+                "are given the option to\nsearch all the stops by stop name, which will update the table with none, one or more than one" +
+                "stop with the matching name.");
+        VBox buttonTwo = new VBox();
+        buttonTwo.setSpacing(5);
+        buttonTwo.setPadding(new Insets(10, 10, 50, 10));
+        buttonTwo.getChildren().addAll(functionalityTwoButton, buttonTwoLabel);
+        buttonTwo.setAlignment(Pos.CENTER);
 
         Button functionalityThreeButton = new Button("Find Buses by Time");
-        pane.add(functionalityThreeButton, 0, 4);
-        //GridPane.setValignment(functionalityThreeButton, VPos.TOP);
-        GridPane.setHalignment(functionalityThreeButton, HPos.CENTER);
+        functionalityThreeButton.setStyle("-fx-font-size: 16px;");
+        Label buttonThreeLabel = new Label("This button will bring you to a page where you are given a prompt to fill in an arrival time" +
+                " which once you do this,\nwill display a table with all routes that have an arrival time equal to the one you will input.");
+        VBox buttonThree = new VBox();
+        buttonThree.setSpacing(5);
+        buttonThree.setPadding(new Insets(10, 10, 180, 10));
+        buttonThree.getChildren().addAll(functionalityThreeButton, buttonThreeLabel);
+        buttonThree.setAlignment(Pos.CENTER);
 
-        Label teamLabel = new Label("Team: Cian Jinks, Ajchan Mamedov, James Cowan, Vitali Borsak");
-        pane.add(teamLabel, 0, 5);
-        //GridPane.setValignment(teamLabel, VPos.BOTTOM);
-        GridPane.setHalignment(teamLabel, HPos.CENTER);
+        Button teamButton = new Button("Team Info");
+        teamButton.setAlignment(Pos.BOTTOM_LEFT);
+
+        vboxTitle.getChildren().addAll(titleLabel, descriptionLabel);
+        vboxButtons.getChildren().addAll(buttonOne, buttonTwo, buttonThree);
+        vbox.getChildren().addAll(vboxTitle, vboxButtons, teamButton);
 
         functionalityOneButton.setOnAction((ActionEvent e) ->  {
             stage.setScene(ShortestPathScene);
@@ -91,14 +116,79 @@ public class UIApp extends Application {
             stage.setScene(FindBusByTimeScene);
         });
 
+        teamButton.setOnAction((ActionEvent e) -> {
+            stage.setScene(TeamInfoScene);
+        });
+
         initShortestPathScene(stage);
         initFindBusStopScene(stage);
         initFindBusByTimeScene(stage);
+        initTeamInfoScene(stage);
 
-        HomePageScene = new Scene(pane, X_SIZE, Y_SIZE);
+        HomePageScene = new Scene(vbox, X_SIZE, Y_SIZE);
         stage.setTitle("Vancouver Bus Network");
         stage.setScene(HomePageScene);
         stage.show();
+    }
+
+    public void initTeamInfoScene(Stage stage){
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+        vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        Label titleLabel = new Label("Information About the Team Behind this Application");
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+
+        VBox CianJinks = new VBox();
+        CianJinks.setSpacing(5);
+        CianJinks.setPadding(new Insets(10, 10, 20, 10));
+
+        Label CianName = new Label("Cian Jinks:");
+        CianName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label CianDescription = new Label("Cian Jinks was the back-end developer, he worked on making the back-end of functionality 1" +
+                " and 2 work.");
+        CianJinks.getChildren().addAll(CianName, CianDescription);
+
+        VBox AjchanMamedov = new VBox();
+        AjchanMamedov.setSpacing(5);
+        AjchanMamedov.setPadding(new Insets(10, 10, 20, 10));
+
+        Label AjchanName = new Label("Ajchan Mamedov:");
+        AjchanName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label AjchanDescription = new Label("Ajchan Mamedov worked both on back-end and front-end, he worked on reading and parsing the" +
+                "stop_times file. He also worked on functionality 3 UI (display stops by arrival time).");
+        AjchanMamedov.getChildren().addAll(AjchanName, AjchanDescription);
+
+        VBox JamesCowan = new VBox();
+        JamesCowan.setSpacing(5);
+        JamesCowan.setPadding(new Insets(10, 10, 20, 10));
+
+        Label JamesName = new Label("James Cowan:");
+        JamesName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label JamesDescription = new Label("James Cowan worked on both the front-end and back-end, he worked on reading and parsing the" +
+                "transfer file. He worked on functionality 1 UI (display the shortest distance between two stops) also.");
+        JamesCowan.getChildren().addAll(JamesName, JamesDescription);
+
+        VBox VitaliBorsak = new VBox();
+        VitaliBorsak.setSpacing(5);
+        VitaliBorsak.setPadding(new Insets(10, 10, 20, 10));
+
+        Label VitaliName = new Label("Vitali Borsak:");
+        VitaliName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label VitaliDescription = new Label("Vitali Borsak worked on both the back-end and front-end functionality, he implemented the back" +
+                "-end of Ternary Search Trie data structure along with the search function and the front-end of functionality 3 UI " +
+                "\n(search all bus stops by name with the user input). He also read in and parsed the stops file and helped read in and parse" +
+                " the stop_times file.");
+        VitaliBorsak.getChildren().addAll(VitaliName, VitaliDescription);
+
+        Button returnButton = new Button("Return Home");
+        returnButton.setOnAction((ActionEvent e) -> {
+            stage.setScene(HomePageScene);
+        });
+        vbox.getChildren().addAll(titleLabel, CianJinks, AjchanMamedov, JamesCowan, VitaliBorsak, returnButton);
+
+        TeamInfoScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
 
     public void initShortestPathScene(Stage stage){
@@ -158,6 +248,12 @@ public class UIApp extends Application {
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 10, 10, 10));
 
+        // Horizontal box of the screen
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        hbox.setPadding(new Insets(0, 10, 10, 0));
+
+        // Creating and styling the header text
         Label tableLabel = new Label("Search for Bus Stops by Name");
         tableLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
@@ -222,10 +318,12 @@ public class UIApp extends Application {
             change.setText(change.getText().toUpperCase());
             return change;
         }));
-        // Updates the contents of the table with whatever is inputted into the search bar
-        textField.textProperty().addListener((obs, newValue, oldValue) -> {
-            ArrayList<BusStop> matchedNames = network.searchTrie(newValue);
-            tableView.setItems(FXCollections.observableArrayList(matchedNames));
+        // If enter is pressed, generate table
+        textField.setOnKeyPressed(event -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                ArrayList<BusStop> matchedNames = network.searchTrie(textField.getText());
+                tableView.setItems(FXCollections.observableArrayList(matchedNames));
+            }
         });
 
         // Creates a home button
@@ -236,7 +334,16 @@ public class UIApp extends Application {
             textField.setText("");
         });
 
-        vbox.getChildren().addAll(tableLabel, tableView, textField, returnButton);
+        // Search button which reads in the contents of the search bar and populates the table accordingly
+        Button searchButton = new Button("Search");
+        searchButton.setOnAction((ActionEvent e) -> {
+            ArrayList<BusStop> matchedNames = network.searchTrie(textField.getText());
+            tableView.setItems(FXCollections.observableArrayList(matchedNames));
+        });
+
+        // Adding all components into the vbox to then display it
+        hbox.getChildren().addAll(textField, searchButton, returnButton);
+        vbox.getChildren().addAll(tableLabel, tableView, textField, hbox);
         vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
         FindBusStopScene = new Scene(vbox, X_SIZE, Y_SIZE);
