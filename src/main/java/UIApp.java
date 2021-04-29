@@ -21,6 +21,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -160,6 +161,10 @@ public class UIApp extends Application {
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 10, 10, 10));
 
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        hbox.setPadding(new Insets(0, 10, 10, 0));
+
         Label tableLabel = new Label("Search for Bus Stops by Name");
         tableLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
@@ -225,9 +230,15 @@ public class UIApp extends Application {
             return change;
         }));
         // Updates the contents of the table with whatever is inputted into the search bar
-        textField.textProperty().addListener((obs, newValue, oldValue) -> {
+        /*textField.textProperty().addListener((obs, newValue, oldValue) -> {
             ArrayList<BusStop> matchedNames = network.searchTrie(newValue);
             tableView.setItems(FXCollections.observableArrayList(matchedNames));
+        });*/
+        textField.setOnKeyPressed(event -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                ArrayList<BusStop> matchedNames = network.searchTrie(textField.getText());
+                tableView.setItems(FXCollections.observableArrayList(matchedNames));
+            }
         });
 
         // Creates a home button
@@ -238,7 +249,14 @@ public class UIApp extends Application {
             textField.setText("");
         });
 
-        vbox.getChildren().addAll(tableLabel, tableView, textField, returnButton);
+        Button searchButton = new Button("Search");
+        searchButton.setOnAction((ActionEvent e) -> {
+            ArrayList<BusStop> matchedNames = network.searchTrie(textField.getText());
+            tableView.setItems(FXCollections.observableArrayList(matchedNames));
+        });
+
+        hbox.getChildren().addAll(textField, searchButton, returnButton);
+        vbox.getChildren().addAll(tableLabel, tableView, textField, hbox);
         vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
         FindBusStopScene = new Scene(vbox, X_SIZE, Y_SIZE);
