@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -194,20 +195,26 @@ public class UIApp extends Application {
     static class StopCell extends ListCell<Integer> {
         @Override
         protected void updateItem(Integer item, boolean empty) {
-
             Image image = new Image("Stop.png");
             super.updateItem(item, empty);
             if (getIndex() == 0) {
                 image = new Image("FirstStop.png");
-            } else if (false) {
+            } else if (getIndex() == getListView().getItems().size() - 1) {
                 image = new Image("LastStop.png");
             }
+            String stopName = "No Stop Name";
+            try {
+                stopName = network.lookup(item).stopName;
+            }catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(30);
-            imageView.setPreserveRatio(true);
-            HBox box = new HBox(20, imageView, new Label(String.valueOf(item)));
-            setGraphic(box);
 
+            imageView.setFitHeight(40);
+            imageView.setPreserveRatio(true);
+            HBox box = new HBox(20, imageView, new Label(String.valueOf(item)), new Label(stopName));
+            box.setFillHeight(true);
+            setGraphic(box);
         }
     }
     public void initShortestPathScene(Stage stage){
@@ -232,6 +239,8 @@ public class UIApp extends Application {
         Button searchButton = new Button("Search");
         ListView<Integer> stopView = new ListView<>();
         stopView.setCellFactory(stopCell -> new StopCell());
+        Label distanceLabel = new Label("");
+        distanceLabel.setVisible(false);
 
         searchButton.setOnAction(new EventHandler<>() {
             @Override
@@ -244,10 +253,12 @@ public class UIApp extends Application {
                 stops.addAll(route);
                 ObservableList<Integer> observableStops = FXCollections.observableArrayList(stops);
                 stopView.setItems(observableStops);
+                distanceLabel.setVisible(true);
+                distanceLabel.setText("Total trip distance of: " + distance[0]);
             }
         });
         Button returnButton = new Button("Back");
-        HBox searchBox = new HBox(20, startField, endField, searchButton);
+        HBox searchBox = new HBox(20, startField, endField, searchButton, distanceLabel);
         VBox vBox = new VBox(20, searchBox, stopView);
         vBox.setAlignment(Pos.CENTER);
         HBox bottomButtons = new HBox(20, returnButton);
