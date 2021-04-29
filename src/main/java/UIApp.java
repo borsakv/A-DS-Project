@@ -140,11 +140,53 @@ public class UIApp extends Application {
         Label titleLabel = new Label("Information About the Team Behind this Application");
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
+        VBox CianJinks = new VBox();
+        CianJinks.setSpacing(5);
+        CianJinks.setPadding(new Insets(10, 10, 20, 10));
+
+        Label CianName = new Label("Cian Jinks:");
+        CianName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label CianDescription = new Label("Cian Jinks was the back-end developer, he worked on making the back-end of functionality 1" +
+                " and 2 work.");
+        CianJinks.getChildren().addAll(CianName, CianDescription);
+
+        VBox AjchanMamedov = new VBox();
+        AjchanMamedov.setSpacing(5);
+        AjchanMamedov.setPadding(new Insets(10, 10, 20, 10));
+
+        Label AjchanName = new Label("Ajchan Mamedov:");
+        AjchanName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label AjchanDescription = new Label("Ajchan Mamedov worked both on back-end and front-end, he worked on reading and parsing the" +
+                "stop_times file. He also worked on functionality 3 UI (display stops by arrival time).");
+        AjchanMamedov.getChildren().addAll(AjchanName, AjchanDescription);
+
+        VBox JamesCowan = new VBox();
+        JamesCowan.setSpacing(5);
+        JamesCowan.setPadding(new Insets(10, 10, 20, 10));
+
+        Label JamesName = new Label("James Cowan:");
+        JamesName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label JamesDescription = new Label("James Cowan worked on both the front-end and back-end, he worked on reading and parsing the" +
+                "transfer file. He worked on functionality 1 UI (display the shortest distance between two stops) also.");
+        JamesCowan.getChildren().addAll(JamesName, JamesDescription);
+
+        VBox VitaliBorsak = new VBox();
+        VitaliBorsak.setSpacing(5);
+        VitaliBorsak.setPadding(new Insets(10, 10, 20, 10));
+
+        Label VitaliName = new Label("Vitali Borsak:");
+        VitaliName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label VitaliDescription = new Label("Vitali Borsak worked on both the back-end and front-end functionality, he implemented the back" +
+                "-end of Ternary Search Trie data structure along with the search function and the front-end of functionality 3 UI " +
+                "\n(search all bus stops by name with the user input). He also read in and parsed the stops file and helped read in and parse" +
+                " the stop_times file.");
+        VitaliBorsak.getChildren().addAll(VitaliName, VitaliDescription);
+
         Button returnButton = new Button("Return Home");
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
-        vbox.getChildren().addAll(titleLabel, returnButton);
+        vbox.getChildren().addAll(titleLabel, CianJinks, AjchanMamedov, JamesCowan, VitaliBorsak, returnButton);
 
         TeamInfoScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
