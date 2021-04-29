@@ -206,9 +206,7 @@ public class UIApp extends Application {
             String stopName = "No Stop Name";
             try {
                 stopName = network.lookup(item).stopName;
-            }catch (NullPointerException e) {
-                e.printStackTrace();
-            }
+            }catch (NullPointerException ignored) {}
             ImageView imageView = new ImageView(image);
 
             imageView.setFitHeight(40);
@@ -242,10 +240,19 @@ public class UIApp extends Application {
         stopView.setCellFactory(stopCell -> new StopCell());
         Label distanceLabel = new Label("");
         distanceLabel.setVisible(false);
+        Label invalidSearchLabel = new Label("That route does not exist, please try another route.");
+        invalidSearchLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+        invalidSearchLabel.setAlignment(Pos.CENTER);
+
+        invalidSearchLabel.setVisible(false);
 
         searchButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent event) {
+                distanceLabel.setVisible(true);
+                stopView.setVisible(true);
+                invalidSearchLabel.setVisible(false);
+                distanceLabel.setText("Total trip distance of: " + distance[0]);
                 stops.clear();
                 distance[0] = -1.0;
                 int start = Integer.parseInt(startField.getText());
@@ -254,13 +261,17 @@ public class UIApp extends Application {
                 stops.addAll(route);
                 ObservableList<Integer> observableStops = FXCollections.observableArrayList(stops);
                 stopView.setItems(observableStops);
-                distanceLabel.setVisible(true);
-                distanceLabel.setText("Total trip distance of: " + distance[0]);
+                if (distance[0] == -1) {
+                    stopView.setVisible(false);
+                    invalidSearchLabel.setVisible(true);
+                    distanceLabel.setVisible(false);
+                }
             }
         });
+
         Button returnButton = new Button("Back");
         HBox searchBox = new HBox(20, startField, endField, searchButton, distanceLabel);
-        VBox vBox = new VBox(20, searchBox, stopView);
+        VBox vBox = new VBox(20, searchBox, invalidSearchLabel, stopView);
         vBox.setAlignment(Pos.CENTER);
         HBox bottomButtons = new HBox(20, returnButton);
         VBox content = new VBox(20, title, vBox, bottomButtons);
