@@ -100,8 +100,8 @@ public class UIApp extends Application {
         Button surpriseButton = new Button("Click for Surprise ;)");
 
         HBox bottomButtons = new HBox();
-        bottomButtons.setSpacing(5);
-        bottomButtons.setPadding(new Insets(10, 10, 0, 0));
+        bottomButtons.setSpacing(X_SIZE - 220);
+        bottomButtons.setPadding(new Insets(10, 0, 0, 0));
 
         bottomButtons.getChildren().addAll(teamButton, surpriseButton);
         vboxTitle.getChildren().addAll(titleLabel, descriptionLabel);
@@ -126,7 +126,7 @@ public class UIApp extends Application {
 
         surpriseButton.setOnAction((ActionEvent e) -> {
             try {
-                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"));
+                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=xvFZjo5PgG0"));
             } catch (IOException e1) {
                 e1.printStackTrace();
             } catch (URISyntaxException e1) {
