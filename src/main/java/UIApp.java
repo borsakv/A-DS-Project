@@ -15,13 +15,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -191,6 +191,25 @@ public class UIApp extends Application {
         TeamInfoScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
 
+    static class StopCell extends ListCell<Integer> {
+        @Override
+        protected void updateItem(Integer item, boolean empty) {
+
+            Image image = new Image("Stop.png");
+            super.updateItem(item, empty);
+            if (getIndex() == 0) {
+                image = new Image("FirstStop.png");
+            } else if (false) {
+                image = new Image("LastStop.png");
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(30);
+            imageView.setPreserveRatio(true);
+            HBox box = new HBox(20, imageView, new Label(String.valueOf(item)));
+            setGraphic(box);
+
+        }
+    }
     public void initShortestPathScene(Stage stage){
         ArrayList<Integer> stops = new ArrayList<>();
         double[] distance = new double[1];
@@ -212,6 +231,7 @@ public class UIApp extends Application {
         });
         Button searchButton = new Button("Search");
         ListView<Integer> stopView = new ListView<>();
+        stopView.setCellFactory(stopCell -> new StopCell());
 
         searchButton.setOnAction(new EventHandler<>() {
             @Override
