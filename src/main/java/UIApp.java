@@ -12,7 +12,6 @@
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -196,24 +195,29 @@ public class UIApp extends Application {
     static class StopCell extends ListCell<Integer> {
         @Override
         protected void updateItem(Integer item, boolean empty) {
-            Image image = new Image("Stop.png");
             super.updateItem(item, empty);
-            if (getIndex() == 0) {
-                image = new Image("FirstStop.png");
-            } else if (getIndex() == getListView().getItems().size() - 1) {
-                image = new Image("LastStop.png");
-            }
-            String stopName = "No Stop Name";
-            try {
-                stopName = network.lookup(item).stopName;
-            }catch (NullPointerException ignored) {}
-            ImageView imageView = new ImageView(image);
+            if (empty || item == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                Image image = new Image("Stop.png");
+                if (getIndex() == 0) {
+                    image = new Image("FirstStop.png");
+                } else if (getIndex() == getListView().getItems().size() - 1) {
+                    image = new Image("LastStop.png");
+                }
+                String stopName = "No Stop Name";
+                try {
+                    stopName = network.lookup(item).stopName;
+                }catch (NullPointerException ignored) {}
+                ImageView imageView = new ImageView(image);
 
-            imageView.setFitHeight(40);
-            imageView.setPreserveRatio(true);
-            HBox box = new HBox(20, imageView, new Label(String.valueOf(item)), new Label(stopName));
-            box.setFillHeight(true);
-            setGraphic(box);
+                imageView.setFitHeight(40);
+                imageView.setPreserveRatio(true);
+                HBox box = new HBox(20, imageView, new Label(String.valueOf(item)), new Label(stopName));
+                box.setFillHeight(true);
+                setGraphic(box);
+            }
         }
     }
     public void initShortestPathScene(Stage stage){
@@ -237,6 +241,7 @@ public class UIApp extends Application {
         });
         Button searchButton = new Button("Search");
         ListView<Integer> stopView = new ListView<>();
+        stopView.setPlaceholder(new Cell<>());
         stopView.setCellFactory(stopCell -> new StopCell());
         Label distanceLabel = new Label("");
         distanceLabel.setVisible(false);
@@ -252,16 +257,16 @@ public class UIApp extends Application {
                 distanceLabel.setVisible(true);
                 stopView.setVisible(true);
                 invalidSearchLabel.setVisible(false);
-                stops.clear();
                 distance[0] = -1.0;
                 int start = Integer.parseInt(startField.getText());
                 int end = Integer.parseInt(endField.getText());
                 ArrayList<Integer> route =  network.getShortestPath(start, end, distance);
+                stops.clear();
                 stops.addAll(route);
-                ObservableList<Integer> observableStops = FXCollections.observableArrayList(stops);
-                stopView.setItems(observableStops);
+                stopView.setItems(FXCollections.observableArrayList(stops));
                 distanceLabel.setText(String.format("Total trip distance of: %.1f", distance[0]));
                 if (distance[0] == -1) {
+                    stops.clear();
                     stopView.setVisible(false);
                     invalidSearchLabel.setVisible(true);
                     distanceLabel.setVisible(false);
