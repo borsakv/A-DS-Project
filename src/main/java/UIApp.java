@@ -98,18 +98,10 @@ public class UIApp extends Application {
         teamButton.setAlignment(Pos.BOTTOM_LEFT);
 
         Button surpriseButton = new Button("Click for Surprise ;)");
-        surpriseButton.setOnAction((ActionEvent e) -> {
-            try {
-                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (URISyntaxException e1) {
-                e1.printStackTrace();
-            }
-        });
+
         HBox bottomButtons = new HBox();
         bottomButtons.setSpacing(5);
-        bottomButtons.setPadding(new Insets(10, 10, 0, 10));
+        bottomButtons.setPadding(new Insets(10, 10, 0, 0));
 
         bottomButtons.getChildren().addAll(teamButton, surpriseButton);
         vboxTitle.getChildren().addAll(titleLabel, descriptionLabel);
@@ -130,6 +122,16 @@ public class UIApp extends Application {
 
         teamButton.setOnAction((ActionEvent e) -> {
             stage.setScene(TeamInfoScene);
+        });
+
+        surpriseButton.setOnAction((ActionEvent e) -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (URISyntaxException e1) {
+                e1.printStackTrace();
+            }
         });
 
         initShortestPathScene(stage);
