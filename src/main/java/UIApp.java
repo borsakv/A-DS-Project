@@ -1,14 +1,3 @@
-//public class Main {
-//    public static void main(String[] args)
-//    {
-//        // Setup everything
-//
-//
-//        // GUI CODE
-//        // Useful Functions: BusNetwork::getShortestPath(), BusNetwork::lookup(), TernarySearchTrie::Search(), TripDatabase::SearchTime()
-//    }
-//}
-
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -19,6 +8,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +19,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
@@ -102,9 +98,24 @@ public class UIApp extends Application {
         Button teamButton = new Button("Team Info");
         teamButton.setAlignment(Pos.BOTTOM_LEFT);
 
+        Button surpriseButton = new Button("Click for Surprise ;)");
+        surpriseButton.setOnAction((ActionEvent e) -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (URISyntaxException e1) {
+                e1.printStackTrace();
+            }
+        });
+        HBox bottomButtons = new HBox();
+        bottomButtons.setSpacing(5);
+        bottomButtons.setPadding(new Insets(10, 10, 0, 10));
+
+        bottomButtons.getChildren().addAll(teamButton, surpriseButton);
         vboxTitle.getChildren().addAll(titleLabel, descriptionLabel);
         vboxButtons.getChildren().addAll(buttonOne, buttonTwo, buttonThree);
-        vbox.getChildren().addAll(vboxTitle, vboxButtons, teamButton);
+        vbox.getChildren().addAll(vboxTitle, vboxButtons, bottomButtons);
 
         functionalityOneButton.setOnAction((ActionEvent e) ->  {
             stage.setScene(ShortestPathScene);
