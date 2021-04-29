@@ -140,7 +140,7 @@ public class UIApp extends Application {
         vbox.setPadding(new Insets(10, 10, 10, 10));
         vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
-        Label titleLabel = new Label("Information About the Team Behind this Application");
+        Label titleLabel = new Label("Information About the Team Contribution for this Application");
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
         VBox CianJinks = new VBox();
@@ -149,8 +149,8 @@ public class UIApp extends Application {
 
         Label CianName = new Label("Cian Jinks:");
         CianName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label CianDescription = new Label("Cian Jinks was the back-end developer, he worked on making the back-end of functionality 1" +
-                " and 2 work.");
+        Label CianDescription = new Label("Created the BusNetwork class and TripDatabase class. Implemented shortest path algorithm " +
+                " (functionality 1)\nand searching trips by arrival time (functionality 3).");
         CianJinks.getChildren().addAll(CianName, CianDescription);
 
         VBox AjchanMamedov = new VBox();
@@ -159,8 +159,7 @@ public class UIApp extends Application {
 
         Label AjchanName = new Label("Ajchan Mamedov:");
         AjchanName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label AjchanDescription = new Label("Ajchan Mamedov worked both on back-end and front-end, he worked on reading and parsing the" +
-                "stop_times file. He also worked on functionality 3 UI (display stops by arrival time).");
+        Label AjchanDescription = new Label("Read in stop_times.txt and stored in TripDatabase. Created arrival time searching UI page.");
         AjchanMamedov.getChildren().addAll(AjchanName, AjchanDescription);
 
         VBox JamesCowan = new VBox();
@@ -169,8 +168,8 @@ public class UIApp extends Application {
 
         Label JamesName = new Label("James Cowan:");
         JamesName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label JamesDescription = new Label("James Cowan worked on both the front-end and back-end, he worked on reading and parsing the" +
-                "transfer and stops files. He worked on functionality 1 UI (display the shortest distance between two stops) also.");
+        Label JamesDescription = new Label("Read in stops.txt and transfers.txt and stored into appropriate classes. Created the Shortest " +
+                " Path searching UI page.");
         JamesCowan.getChildren().addAll(JamesName, JamesDescription);
 
         VBox VitaliBorsak = new VBox();
@@ -179,10 +178,8 @@ public class UIApp extends Application {
 
         Label VitaliName = new Label("Vitali Borsak:");
         VitaliName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label VitaliDescription = new Label("Vitali Borsak worked on both the back-end and front-end functionality, he implemented the back" +
-                "-end of Ternary Search Trie data structure along with the search function and the front-end of functionality 3 UI " +
-                "\n(search all bus stops by name with the user input). He also read in and parsed the stops file and helped read in and parse" +
-                " the stop_times file.");
+        Label VitaliDescription = new Label("Created the TernarySearchTrie class (functionality 2). Created the UI for home page, " +
+                " team info page and\nTeaTernary Search Trie page.");
         VitaliBorsak.getChildren().addAll(VitaliName, VitaliDescription);
 
         Button returnButton = new Button("Return Home");
