@@ -1,3 +1,5 @@
+import javafx.beans.property.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
@@ -28,31 +30,159 @@ public class TripDatabase {
 
     //holds one line of the information from stop_times.txt
     //has 4 parameters tripID, stopID, arrivalTime, departureTime
-    static public class TripSection
-    {
-        public int tripID;
-        public int stopID;
-        public TripTime arrivalTime;
-        public TripTime departureTime;
-        public int stopSequence;
-        public int stopHeadsign;
-        public int pickupType;
-        public int dropOffType;
-        public float distTraveled;
+    static public class TripSection {
+        private int tripID;
+        private final IntegerProperty tripIDProperty;
+        private int stopID;
+        private final IntegerProperty stopIDProperty;
+        private TripTime arrivalTime;
+        private final StringProperty arrivalTimeProperty;
+        private TripTime departureTime;
+        private final StringProperty departureTimeProperty;
+        private int stopSequence;
+        private final IntegerProperty stopSequenceProperty;
+        private int stopHeadsign;
+        private final IntegerProperty stopHeadsignProperty;
+        private int pickupType;
+        private final IntegerProperty pickupTypeProperty;
+        private int dropOffType;
+        private final IntegerProperty dropOffTypeProperty;
+        private float distTraveled;
+        private final FloatProperty distTraveledProperty;
 
         //a constructor of TripSection to write in the information
-        public TripSection(int tripID, int stopID, TripTime arrivalTime, TripTime departureTime, int stopSequence, int stopHeadsign, int pickupType, int dropOffType, float distTraveled)
+        public TripSection(int tripID, int stopID, TripTime arrivalTime, TripTime departureTime, int stopSequence,
+                           int stopHeadsign, int pickupType, int dropOffType, float distTraveled)
         {
             this.tripID = tripID;
+            tripIDProperty = new SimpleIntegerProperty(tripID);
             this.stopID = stopID;
+            stopIDProperty = new SimpleIntegerProperty(stopID);
             this.arrivalTime = arrivalTime;
+            arrivalTimeProperty = new SimpleStringProperty(arrivalTime.time);
             this.departureTime = departureTime;
+            departureTimeProperty = new SimpleStringProperty(departureTime.time);
             this.stopSequence = stopSequence;
+            stopSequenceProperty = new SimpleIntegerProperty(stopSequence);
             this.stopHeadsign = stopHeadsign;
+            stopHeadsignProperty = new SimpleIntegerProperty(stopHeadsign);
             this.pickupType = pickupType;
+            pickupTypeProperty = new SimpleIntegerProperty(pickupType);
             this.dropOffType = dropOffType;
+            dropOffTypeProperty = new SimpleIntegerProperty(dropOffType);
             this.distTraveled = distTraveled;
+            distTraveledProperty = new SimpleFloatProperty(distTraveled);
         }
+
+        public int getStopID() {
+            return stopID;
+        }
+
+        public int getTripID() {
+            return tripID;
+        }
+
+        public String getArrivalTime() {
+            return arrivalTime.time;
+        }
+
+        public String getDepartureTime() {
+            return departureTime.time;
+        }
+
+        public int getStopSequence() {
+            return stopSequence;
+        }
+
+        public int getStopHeadsign() {
+            return stopHeadsign;
+        }
+
+        public int getPickupType() {
+            return pickupType;
+        }
+
+        public int getDropOffType() {
+            return dropOffType;
+        }
+
+        public float getDistTraveled() {
+            return distTraveled;
+        }
+
+        //Property
+        public int getTripIDProperty() {
+            return tripIDProperty.get();
+        }
+
+        public void setTripIDProperty(int tripID) {
+            tripIDProperty.set(tripID);
+        }
+
+        public int getStopIDProperty() {
+            return stopIDProperty.get();
+        }
+
+        public void setStopIDProperty(int stopID) {
+            stopIDProperty.set(stopID);
+        }
+
+        public String getArrivalTimeProperty() {
+            return arrivalTimeProperty.get();
+        }
+
+        public void setArrivalTimeProperty(String arrivalTime) {
+            arrivalTimeProperty.set(arrivalTime);
+        }
+
+        public String getDepartureTimeProperty() {
+            return departureTimeProperty.get();
+        }
+
+        public void setDepartureTimeProperty(String departureTime) {
+            departureTimeProperty.set(departureTime);
+        }
+
+        public int getStopSequenceProperty() {
+            return stopSequenceProperty.get();
+        }
+
+        public void setStopSequenceProperty(int stopSequence) {
+            stopSequenceProperty.set(stopSequence);
+        }
+
+        public int getStopHeadsignProperty() {
+            return stopHeadsignProperty.get();
+        }
+
+        public void setStopHeadsignProperty(int stopHeadsign) {
+            stopHeadsignProperty.set(stopHeadsign);
+        }
+
+        public int getPickupTypeProperty() {
+            return pickupTypeProperty.get();
+        }
+
+        public void setPickupTypeProperty(int pickupType) {
+            pickupTypeProperty.set(pickupType);
+        }
+
+        public int getDropOffTypeProperty() {
+            return dropOffTypeProperty.get();
+        }
+
+        public void setDropOffTypeProperty(int dropOffType) {
+            dropOffTypeProperty.set(dropOffType);
+        }
+
+        public float getDistTraveledProperty() {
+            return distTraveledProperty.get();
+        }
+
+        public void setDistTraveledProperty(float distTraveled) {
+            distTraveledProperty.set(distTraveled);
+        }
+
     }
 
     public void readTheStopTimeFile(String tripFilePath)
@@ -210,8 +340,12 @@ public class TripDatabase {
         public int hours;
         public int minutes;
         public int seconds;
+        public String time;
 
-        public TripTime(String time){ updateTime(time); }
+        public TripTime(String time){
+            this.time = time;
+            updateTime(time);
+        }
 
         public TripTime(int hours, int minutes, int seconds)
         {

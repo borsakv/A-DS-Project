@@ -36,7 +36,8 @@ public class UIApp extends Application {
     public static TripDatabase tripDatabase;
     public static final int X_SIZE = 1280;
     public static final int Y_SIZE = 720;
-    public static Scene HomePageScene, ShortestPathScene, FindBusStopScene, FindBusByTimeScene, TeamInfoScene;
+    public static Scene HomePageScene, ShortestPathScene, FindBusStopScene, FindBusByTimeScene, TeamInfoScene, FindBusByTimeSecondScene;
+    ArrayList<TripDatabase.Trip> results;
 
     @Override
     public void init() throws Exception {
@@ -408,14 +409,18 @@ public class UIApp extends Application {
             int minutes = Integer.parseInt(searchFieldMM.getText());
             int seconds = Integer.parseInt(searchFieldSS.getText());
             if(hours < 24 && minutes < 60 && seconds < 60) {
-                ArrayList<TripDatabase.Trip> results = new ArrayList<>();
+                results = new ArrayList<>();
                 results = tripDatabase.searchForArrivalTime(hours, minutes, seconds);
                 pane.getChildren().remove(errorLabel);
+                initFindBusByTimeSecondScene(stage);
+                stage.setScene(FindBusByTimeSecondScene);
             }
             else{
-
                 pane.add(errorLabel, 4, 4);
             }
+            searchFieldHH.setText("");
+            searchFieldMM.setText("");
+            searchFieldSS.setText("");
         });
 
         Button returnButton = new Button("Home");
@@ -428,6 +433,102 @@ public class UIApp extends Application {
         FindBusByTimeScene = new Scene(pane, X_SIZE, Y_SIZE);
     }
 
+    public void initFindBusByTimeSecondScene(Stage stage){
+        // Vertical box of the screen
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+
+        Label tableLabel = new Label("Search for Trips by Arrival Time");
+        tableLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+
+        // Creates a table class
+        TableView tableView = new TableView();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.prefHeightProperty().bind(stage.heightProperty());
+        tableView.prefWidthProperty().bind(stage.widthProperty());
+        // Allow the editing of the table
+        tableView.setEditable(true);
+
+        // Creates a column in the table with the stopIdProperty which is connected to the TripSection class
+        TableColumn TripIdColumn = new TableColumn("Trip ID");
+        TripIdColumn.setMinWidth(100);
+        TripIdColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Integer>("tripIDProperty"));
+
+        // Creates a column in the table with the stopNameProperty which is connected to the TripSection class
+        TableColumn stopIdColumn = new TableColumn("Stop Id");
+        stopIdColumn.setMinWidth(100);
+        stopIdColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, String>("stopIDProperty"));
+
+        // Creates a column in the table with the stopCodeProperty which is connected to the TripSection class
+        TableColumn arrivalTimeColumn = new TableColumn("Arrival time");
+        arrivalTimeColumn.setMinWidth(100);
+        arrivalTimeColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Integer>("arrivalTimeProperty"));
+
+        // Creates a column in the table with the stopDescriptionProperty which is connected to the TripSection class
+        TableColumn departureTimeColumn = new TableColumn("Departure time");
+        departureTimeColumn.setMinWidth(100);
+        departureTimeColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, String>("departureTimeProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        TableColumn stopSequenceColumn = new TableColumn("Stop sequence");
+        stopSequenceColumn.setMinWidth(100);
+        stopSequenceColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Integer>("stopSequenceProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        TableColumn stopHeadsignColumn = new TableColumn("Stop Headsign");
+        stopHeadsignColumn.setMinWidth(100);
+        stopHeadsignColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Double>("stopHeadsignProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        TableColumn stopPickupTypeColumn = new TableColumn("Pickup type");
+        stopPickupTypeColumn.setMinWidth(100);
+        stopPickupTypeColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Double>("pickupTypeProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        TableColumn dropOffTypeColumn = new TableColumn("Drop off type");
+        dropOffTypeColumn.setMinWidth(100);
+        dropOffTypeColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Double>("dropOffTypeProperty"));
+
+        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        TableColumn distTraveledColumn = new TableColumn("Distance traveled");
+        distTraveledColumn.setMinWidth(100);
+        distTraveledColumn.setCellValueFactory(
+                new PropertyValueFactory<TripDatabase.TripSection, Double>("distTraveledProperty"));
+
+        // Adds all the columns to the table
+        tableView.getColumns().addAll(TripIdColumn, stopIdColumn, arrivalTimeColumn, departureTimeColumn,
+                stopSequenceColumn, stopHeadsignColumn, stopPickupTypeColumn, dropOffTypeColumn, distTraveledColumn);
+
+        if(results!=null) {
+            ArrayList<TripDatabase.TripSection> data = new ArrayList<>();
+            for (int i = 0; i < results.size(); i++) {
+                for(int j = 0; j<results.get(i).trip.size(); j++)
+                    data.add(results.get(i).trip.get(j));
+            }
+            tableView.setItems(FXCollections.observableArrayList(data));
+        }
+
+        // Creates a home button
+        Button returnButton = new Button("Return Home");
+        // Adds a listener which brings you to the home page once the button is clicked
+        returnButton.setOnAction((ActionEvent e) -> {
+            stage.setScene(HomePageScene);
+        });
+
+        vbox.getChildren().addAll(tableLabel, tableView, returnButton);
+        vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        FindBusByTimeSecondScene = new Scene(vbox, X_SIZE, Y_SIZE);
+    }
     public static void main(String[] args) {
         LauncherImpl.launchApplication(UIApp.class, PreloadData.class, args);
     }
@@ -445,7 +546,7 @@ public class UIApp extends Application {
             {
                 TripDatabase.TripSection firstSection = t.trip.get(section - 1);
                 TripDatabase.TripSection secondSection = t.trip.get(section);
-                network.addConnection(firstSection.stopID, secondSection.stopID, 1);    // Add this part of the trip to the network
+                network.addConnection(firstSection.getStopID(), secondSection.getStopID(), 1);    // Add this part of the trip to the network
             }
         }
         System.out.println("Done!");
