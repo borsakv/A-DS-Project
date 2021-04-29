@@ -129,6 +129,7 @@ public class UIApp extends Application {
         HomePageScene = new Scene(vbox, X_SIZE, Y_SIZE);
         stage.setTitle("Vancouver Bus Network");
         stage.setScene(HomePageScene);
+        stage.getIcons().add(new Image("bus.png"));
         stage.show();
     }
 
@@ -138,7 +139,7 @@ public class UIApp extends Application {
         vbox.setPadding(new Insets(10, 10, 10, 10));
         vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
-        Label titleLabel = new Label("Information About the Team Behind this Application");
+        Label titleLabel = new Label("Information About the Team Contribution for this Application");
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
 
         VBox CianJinks = new VBox();
@@ -147,8 +148,8 @@ public class UIApp extends Application {
 
         Label CianName = new Label("Cian Jinks:");
         CianName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label CianDescription = new Label("Cian Jinks was the back-end developer, he worked on making the back-end of functionality 1" +
-                " and 2 work.");
+        Label CianDescription = new Label("Created the BusNetwork class and TripDatabase class. Implemented shortest path algorithm " +
+                " (functionality 1)\nand searching trips by arrival time (functionality 3).");
         CianJinks.getChildren().addAll(CianName, CianDescription);
 
         VBox AjchanMamedov = new VBox();
@@ -157,8 +158,7 @@ public class UIApp extends Application {
 
         Label AjchanName = new Label("Ajchan Mamedov:");
         AjchanName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label AjchanDescription = new Label("Ajchan Mamedov worked both on back-end and front-end, he worked on reading and parsing the" +
-                "stop_times file. He also worked on functionality 3 UI (display stops by arrival time).");
+        Label AjchanDescription = new Label("Read in stop_times.txt and stored in TripDatabase. Created arrival time searching UI page.");
         AjchanMamedov.getChildren().addAll(AjchanName, AjchanDescription);
 
         VBox JamesCowan = new VBox();
@@ -167,8 +167,8 @@ public class UIApp extends Application {
 
         Label JamesName = new Label("James Cowan:");
         JamesName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label JamesDescription = new Label("James Cowan worked on both the front-end and back-end, he worked on reading and parsing the" +
-                "transfer and stops files. He worked on functionality 1 UI (display the shortest distance between two stops) also.");
+        Label JamesDescription = new Label("Read in stops.txt and transfers.txt and stored into appropriate classes. Created the Shortest " +
+                " Path searching UI page.");
         JamesCowan.getChildren().addAll(JamesName, JamesDescription);
 
         VBox VitaliBorsak = new VBox();
@@ -177,10 +177,8 @@ public class UIApp extends Application {
 
         Label VitaliName = new Label("Vitali Borsak:");
         VitaliName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label VitaliDescription = new Label("Vitali Borsak worked on both the back-end and front-end functionality, he implemented the back" +
-                "-end of Ternary Search Trie data structure along with the search function and the front-end of functionality 3 UI " +
-                "\n(search all bus stops by name with the user input). He also read in and parsed the stops file and helped read in and parse" +
-                " the stop_times file.");
+        Label VitaliDescription = new Label("Created the TernarySearchTrie class (functionality 2). Created the UI for home page, " +
+                " team info page and\nTeaTernary Search Trie page.");
         VitaliBorsak.getChildren().addAll(VitaliName, VitaliDescription);
 
         Button returnButton = new Button("Return Home");
@@ -282,7 +280,7 @@ public class UIApp extends Application {
         VBox content = new VBox(20, title, vBox, bottomButtons);
         content.setAlignment(Pos.TOP_CENTER);
         content.setPadding(new Insets(20));
-
+        content.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
@@ -398,9 +396,40 @@ public class UIApp extends Application {
     }
 
     public void initFindBusByTimeScene(Stage stage){
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(5, 5, 5, 5));
+        vbox.setAlignment(Pos.TOP_CENTER);
 
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        hbox.setPadding(new Insets(5, 5, 5, 5));
+        hbox.setAlignment(Pos.TOP_CENTER);
+
+        VBox hourVBox = new VBox();
+        hourVBox.setSpacing(5);
+        hourVBox.setPadding(new Insets(5, 5, 5, 5));
+        hourVBox.setAlignment(Pos.TOP_CENTER);
+
+        VBox minuteVBox = new VBox();
+        minuteVBox.setSpacing(5);
+        minuteVBox.setPadding(new Insets(5, 5, 5, 5));
+        minuteVBox.setAlignment(Pos.TOP_CENTER);
+
+        VBox secondVBox = new VBox();
+        secondVBox.setSpacing(5);
+        secondVBox.setPadding(new Insets(5, 5, 5, 5));
+        secondVBox.setAlignment(Pos.TOP_CENTER);
+
+        VBox buttonsVBox = new VBox();
+        buttonsVBox.setSpacing(5);
+        buttonsVBox.setPadding(new Insets(5, 5, 5, 5));
+        buttonsVBox.setAlignment(Pos.TOP_CENTER);
+
+        Label titleLabel = new Label("Search Stops by Arrival Time");
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+
+        //limits the numbers you can enter
         Pattern pattern = Pattern.compile(".{0,2}");
         TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
             return pattern.matcher(change.getControlNewText()).matches() ? change : null;
@@ -413,7 +442,8 @@ public class UIApp extends Application {
         });
 
         Label searchLabelHH = new Label("  HH  :");
-        pane.add(searchLabelHH, 0, 0);
+
+        //hour search field
         TextField searchFieldHH = new TextField();
         searchFieldHH.setPrefWidth(30);
         searchFieldHH.setTextFormatter(formatter);
@@ -421,10 +451,10 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldHH.setText(newValue.replaceAll("[^\\d]", ""));
         });
-        pane.add(searchFieldHH, 0,1);
 
         Label searchLabelMM = new Label("  MM  :");
-        pane.add(searchLabelMM, 1, 0);
+
+        //minute search field
         TextField searchFieldMM = new TextField();
         searchFieldMM.setPrefWidth(30);
         searchFieldMM.setTextFormatter(formatter1);
@@ -432,10 +462,10 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldMM.setText(newValue.replaceAll("[^\\d]", ""));
         });
-        pane.add(searchFieldMM, 1,1);
 
-        Label searchLabelSS = new Label("  SS");
-        pane.add(searchLabelSS, 2, 0);
+        Label searchLabelSS = new Label("  SS   ");
+
+        //seconds search field
         TextField searchFieldSS = new TextField();
         searchFieldSS.setPrefWidth(30);
         searchFieldSS.setTextFormatter(formatter2);
@@ -443,12 +473,11 @@ public class UIApp extends Application {
             if (newValue.matches("\\d*")) return;
             searchFieldSS.setText(newValue.replaceAll("[^\\d]", ""));
         });
-        pane.add(searchFieldSS, 2,1);
 
         Button enterButton = new Button("Enter");
-        pane.add(enterButton, 3, 1);
 
         Label errorLabel = new Label("Your time input is not a valid, retry again ");
+        //displaying when the button is pressed
         enterButton.setOnAction((ActionEvent e) -> {
             int hours = Integer.parseInt(searchFieldHH.getText());
             int minutes = Integer.parseInt(searchFieldMM.getText());
@@ -456,12 +485,12 @@ public class UIApp extends Application {
             if(hours < 24 && minutes < 60 && seconds < 60) {
                 results = new ArrayList<>();
                 results = tripDatabase.searchForArrivalTime(hours, minutes, seconds);
-                pane.getChildren().remove(errorLabel);
+                vbox.getChildren().remove(errorLabel);
                 initFindBusByTimeSecondScene(stage);
                 stage.setScene(FindBusByTimeSecondScene);
             }
             else{
-                pane.add(errorLabel, 4, 4);
+                vbox.getChildren().add(errorLabel);
             }
             searchFieldHH.setText("");
             searchFieldMM.setText("");
@@ -469,13 +498,19 @@ public class UIApp extends Application {
         });
 
         Button returnButton = new Button("Home");
-        pane.add(returnButton, 3, 2);
-
         returnButton.setOnAction((ActionEvent e) -> {
             stage.setScene(HomePageScene);
         });
 
-        FindBusByTimeScene = new Scene(pane, X_SIZE, Y_SIZE);
+        hourVBox.getChildren().addAll(searchLabelHH, searchFieldHH);
+        minuteVBox.getChildren().addAll(searchLabelMM, searchFieldMM);
+        buttonsVBox.getChildren().addAll(enterButton, returnButton);
+        secondVBox.getChildren().addAll(searchLabelSS, searchFieldSS);
+        hbox.getChildren().addAll(hourVBox, minuteVBox, secondVBox, buttonsVBox);
+        vbox.getChildren().addAll(titleLabel, hbox);
+        vbox.setBorder(new Border(new BorderStroke(Color.DARKGREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        FindBusByTimeScene = new Scene(vbox, X_SIZE, Y_SIZE);
     }
 
     public void initFindBusByTimeSecondScene(Stage stage){
@@ -495,55 +530,55 @@ public class UIApp extends Application {
         // Allow the editing of the table
         tableView.setEditable(true);
 
-        // Creates a column in the table with the stopIdProperty which is connected to the TripSection class
+        // Creates a column in the table with the tripIDProperty which is connected to the TripSection class
         TableColumn TripIdColumn = new TableColumn("Trip ID");
         TripIdColumn.setMinWidth(100);
         TripIdColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Integer>("tripIDProperty"));
 
-        // Creates a column in the table with the stopNameProperty which is connected to the TripSection class
+        // Creates a column in the table with the stopIDProperty which is connected to the TripSection class
         TableColumn stopIdColumn = new TableColumn("Stop Id");
         stopIdColumn.setMinWidth(100);
         stopIdColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, String>("stopIDProperty"));
 
-        // Creates a column in the table with the stopCodeProperty which is connected to the TripSection class
+        // Creates a column in the table with the arrivalTimeProperty which is connected to the TripSection class
         TableColumn arrivalTimeColumn = new TableColumn("Arrival time");
         arrivalTimeColumn.setMinWidth(100);
         arrivalTimeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Integer>("arrivalTimeProperty"));
 
-        // Creates a column in the table with the stopDescriptionProperty which is connected to the TripSection class
+        // Creates a column in the table with the departureTimeProperty which is connected to the TripSection class
         TableColumn departureTimeColumn = new TableColumn("Departure time");
         departureTimeColumn.setMinWidth(100);
         departureTimeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, String>("departureTimeProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the stopSequenceProperty which is connected to the TripSection class
         TableColumn stopSequenceColumn = new TableColumn("Stop sequence");
         stopSequenceColumn.setMinWidth(100);
         stopSequenceColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Integer>("stopSequenceProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the stopHeadsignProperty which is connected to the TripSection class
         TableColumn stopHeadsignColumn = new TableColumn("Stop Headsign");
         stopHeadsignColumn.setMinWidth(100);
         stopHeadsignColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Double>("stopHeadsignProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the pickupTypeProperty which is connected to the TripSection class
         TableColumn stopPickupTypeColumn = new TableColumn("Pickup type");
         stopPickupTypeColumn.setMinWidth(100);
         stopPickupTypeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Double>("pickupTypeProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the dropOffTypeProperty which is connected to the TripSection class
         TableColumn dropOffTypeColumn = new TableColumn("Drop off type");
         dropOffTypeColumn.setMinWidth(100);
         dropOffTypeColumn.setCellValueFactory(
                 new PropertyValueFactory<TripDatabase.TripSection, Double>("dropOffTypeProperty"));
 
-        // Creates a column in the table with the stopLongitudeProperty which is connected to the TripSection class
+        // Creates a column in the table with the distTraveledProperty which is connected to the TripSection class
         TableColumn distTraveledColumn = new TableColumn("Distance traveled");
         distTraveledColumn.setMinWidth(100);
         distTraveledColumn.setCellValueFactory(
@@ -553,6 +588,7 @@ public class UIApp extends Application {
         tableView.getColumns().addAll(TripIdColumn, stopIdColumn, arrivalTimeColumn, departureTimeColumn,
                 stopSequenceColumn, stopHeadsignColumn, stopPickupTypeColumn, dropOffTypeColumn, distTraveledColumn);
 
+        //fill the table with ArrayList with TripSection information
         if(results!=null) {
             ArrayList<TripDatabase.TripSection> data = new ArrayList<>();
             for (int i = 0; i < results.size(); i++) {

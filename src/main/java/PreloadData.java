@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -33,6 +34,7 @@ public class PreloadData extends Preloader{
         primaryStage.setWidth(X_SIZE);
         primaryStage.setHeight(Y_SIZE);
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("bus.png"));
         primaryStage.show();
     }
 

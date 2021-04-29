@@ -1,4 +1,0 @@
-TODO:
-UI - Vitali Borsak
-General UI - James Cowan
-General UI - Ajchan Mamedov
