@@ -2,6 +2,8 @@
 
 Link to repository: https://github.com/borsakv/A-DS-Project
 
+**NOTE:** The `stops.txt`, `stop_times.txt` and `transfers.txt` files need to be placed inside the `src/main/resources` folder.
+
 ## Team Contribution
 
 **Cian Jinks** - Created the BusNetwork class and TripDatabase class. Implemented shortest path algorithm (functionality 1) and searching trips by arrival time (functionality 3).
